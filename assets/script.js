@@ -41,6 +41,7 @@ function getRows(day) {
     let row_three = getRow(day, 3);
     let row_four = getRow(day, 4);
     let row_five = [];
+    let row_six = ['⠀'];
     let start = row_four[row_four.length - 1] + 1;
     for (let i = start; i < start + 7; i++) {
         row_five.push(i);
@@ -50,9 +51,13 @@ function getRows(day) {
     }
 
     if (has_thirty) {
-        row_five.push('30');
+        if (day !== 6) {
+            row_five.push('30');
+        } else {
+            row_six[0] = '30';
+        }
     }
-    return [row_one, row_two, row_three, row_four, row_five];
+    return [row_one, row_two, row_three, row_four, row_five, row_six];
 }
 
 let grid = null;
