@@ -49,6 +49,9 @@ function getRows(day) {
         }
     }
 
+    if (has_thirty) {
+        row_five.push('30');
+    }
     return [row_one, row_two, row_three, row_four, row_five];
 }
 
@@ -116,6 +119,7 @@ function forward() {
     render();
 }
 
+let has_thirty = false;
 function render() {
     const table = document.getElementById('table');
     setupCalendar(false);
@@ -148,6 +152,15 @@ function getKeys(group_data) {
     return keys;
 }
 
+function hasThirty(start, next) {
+    let start_split = start.split('/');
+    let start_date = new Date(`${start_split[1]}/${start_split[0]}/${start_split[2]}`);
+    let next_split = next.split('/');
+    let next_date = new Date(`${next_split[1]}/${next_split[0]}/${next_split[2]}`);
+    let diff = Math.round((next_date.getTime() - start_date.getTime()) / (1000 * 3600 * 24));
+    return diff === 30;
+}
+
 function setupCalendar(initial) {
     let select = document.querySelector("select.orgs");
     let selected = localStorage.getItem('org');
@@ -167,7 +180,23 @@ function setupCalendar(initial) {
         return;
     }
     title.innerText = `${name} ${keys[0]}`;
-    let first_day = group_data[keys[0]][keys[1]];
+    let months = group_data[keys[0]];
+    let month_keys = Object.getOwnPropertyNames(months);
+    let last_month = month_keys[month_keys.length - 1];
+    let years = Object.getOwnPropertyNames(group_data);
+    let last_year = years[years.length - 1];
+    if (keys[1] !== last_month) {
+        let start = group_data[keys[0]][keys[1]];
+        let next = group_data[keys[0]][(parseInt(keys[1]) + 1).toString()];
+        has_thirty = hasThirty(start, next);
+    } else if (keys[1] === last_month && keys[0] !== last_year) {
+        let next_year = (parseInt(keys[0]) + 1).toString();
+        let start = group_data[keys[0]][keys[1]];
+        let next = group_data[next_year]['1'];
+        has_thirty = hasThirty(start, next);
+    }
+
+    let first_day = months[keys[1]];
     let date_split = first_day.split('/');
     let date = new Date(`${date_split[1]}/${date_split[0]}/${date_split[2]}`);
     let day = date.getDay();
