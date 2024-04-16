@@ -101,7 +101,7 @@ body.dark {
     background: #000;
 }
 
-body.dark h1, body.dark span {
+body.dark h1, body.dark span, body.dark p {
     color: #fff;
 }
 
@@ -112,6 +112,14 @@ body.dark img {
 body.dark th {
     background: #151515;
     color: #eee;
+}
+
+body td.today, body.dark td.today {
+    color: #87ceeb;
+}
+
+body td.tomorrow, body.dark td.tomorrow {
+    color: #f54040;
 }
 
 body.dark td {
@@ -127,4 +135,23 @@ body.dark select.orgs {
     color: #fff;
     border-color: #eee;
     background: #000;
+}
+
+.today_key {
+    background: #87ceeb;
+    color: #87ceeb !important;
+}
+
+.tomorrow_key {
+    background: #f54040;
+    color: #f54040 !important;
+}
+
+.key {
+    border-radius: 8px;
+    display: inline-block;
+}
+
+div.keys span {
+    font-size: 0.6em;
 }

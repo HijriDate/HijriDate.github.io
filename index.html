@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/assets/style.css" type="text/css">
         <script src="/assets/script.js"></script>
-        <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+        <script src="https://unpkg.com/gridjs@6.1.0/dist/gridjs.umd.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" type="text/css">
         <link rel="icon" href="/favicon.png" />
     </head>
@@ -61,5 +61,13 @@
             <img src="/assets/icons/chevron_right.svg" class="forward" onclick="forward();" />
         </div>
         <div id="table"></div>
+        <br />
+        <div class="keys">
+            <span class="today_key key">00</span>
+            <span>Today - post-midnight, pre-sunset</span>
+            <span class="tomorrow_key key">00</span>
+            <span>Today - pre-midnight, post-sunset</span>
+        </div>
+        <p style="font-size: 0.6em;">*Due to the hijri calendar starting at sunset, and the gregorian calendar starting at midnight, calculating the current day's change withour location data is difficult, and as such 2 days are highlighted as 'today' depending on whether it is before or after sunset.</p>
     </body>
 </html>

@@ -1,5 +1,25 @@
 let dates = null;
 
+function getHijriOffset(day, start) {
+    let today = new Date();
+    let diff = Math.round((today.getTime() - start.getTime()) / (1000 * 3600 * 24)) - 1;
+    if (diff > 30) {
+        return -1;
+    }
+    return diff + start.getDay();
+}
+
+function setToday(day, start) {
+    let offset = getHijriOffset(day, start);
+    if (offset !== -1) {
+        let cells = document.querySelectorAll('td');
+        let today = cells[offset];
+        let tomorrow = cells[offset + 1];
+        today.classList.add('today');
+        tomorrow.classList.add('tomorrow');
+    }
+}
+
 function toggleTheme(checked) {
     if (checked) {
         document.body.classList.add("dark");
@@ -57,11 +77,13 @@ function getRows(day) {
             row_six[0] = '30';
         }
     }
+
     return [row_one, row_two, row_three, row_four, row_five, row_six];
 }
 
 let grid = null;
-function createGrid(day) {
+function createGrid(day, start) {
+    let rows = getRows(day);
     grid = new gridjs.Grid({
         columns: [
             { name: "Sun", width: '5%' },
@@ -72,7 +94,7 @@ function createGrid(day) {
             { name: "Fri", width: '5%' },
             { name: "Sat", width: '5%' }
         ],
-        data: getRows(day),
+        data: rows,
         style: {
             th: {
                 'text-align': 'center'
@@ -82,6 +104,15 @@ function createGrid(day) {
             }
         }
     }).render(document.getElementById('table'));
+    function tableStatesListener(state, prevState) {
+        if (prevState.status < state.status) {
+            if (prevState.status === 2 && state.status === 3) {
+                setToday(curr_day, curr_start);
+            }
+        }
+    }
+
+    grid.config.store.subscribe(tableStatesListener);
 }
 
 let month_names = [
@@ -114,6 +145,7 @@ function setTheme() {
 
 let offset = 0;
 let curr_day = 0;
+let curr_start = null;
 function back() {
     offset += 1;
     render();
@@ -128,9 +160,11 @@ let has_thirty = false;
 function render() {
     const table = document.getElementById('table');
     setupCalendar(false);
+    let rows = getRows(curr_day);
     grid.updateConfig({
-        data: getRows(curr_day)
+        data: rows
     }).forceRender();
+    //setToday(curr_day, curr_start);
 }
 
 function select() {
@@ -169,8 +203,9 @@ function hasThirty(start, next) {
 function setupCalendar(initial) {
     let select = document.querySelector("select.orgs");
     let selected = localStorage.getItem('org');
-    if (!selected) {
-        selected = select.value;
+    let options = [...select.options].map(x => x.value);
+    if (!selected || !options.includes(selected)) {
+        selected = options[0];
     } else {
         select.value = selected;
     }
@@ -219,10 +254,11 @@ function setupCalendar(initial) {
         document.querySelector('img.back').style.display = 'block';
     }
 
+    curr_day = day;
+    curr_start = date;
+
     if (initial) {
-        createGrid(day);
-    } else {
-        curr_day = day;
+        createGrid(day, date);
     }
 }
 
