@@ -115,11 +115,30 @@ body.dark th {
 }
 
 body td.today, body.dark td.today {
-    color: #87ceeb;
+    color: #87ceeb !important;
 }
 
 body td.tomorrow, body.dark td.tomorrow {
     color: #f54040;
+}
+
+body td.white_day {
+    background: #000;
+    color: #fff;
+}
+
+body.dark td.white_day {
+    background: #fff;
+    color: #000;
+}
+
+body td.eid, body.dark td.eid {
+    color: #0f0;
+}
+
+body span.eid.key, body.dark span.eid.key {
+    background: #0f0 !important;
+    color: #0f0;
 }
 
 body.dark td {
@@ -152,6 +171,150 @@ body.dark select.orgs {
     display: inline-block;
 }
 
-div.keys span {
+div.keys span:not(span > span) {
     font-size: 0.6em;
+}
+
+body.dark span.white_day.key {
+    background: #fff;
+    color: #000;
+}
+
+body span.white_day {
+    background: #000;
+    color: #fff;
+}
+
+body span.observe.key {
+    background: #ffa500;
+    color: #ffa500;
+}
+
+body td.observe {
+    color: #ffa500;
+}
+
+.inline {
+    display: inline !important;
+}
+
+body span.arafah {
+    background: #eccca2;
+    color: #eccca2;
+}
+
+body td.arafah {
+    color: #eccca2;
+}
+
+body span.ashura {
+    background: #800080;
+    color: #800080;
+}
+
+body span.ashura_adjacent {
+    background: #355e3b;
+    color: #355e3b;
+}
+
+body td.ashura {
+    color: #800080;
+}
+
+body td.ashura_adjacent {
+    color: #355e3b;
+}
+
+body td.eid.today {
+    background: linear-gradient(#87ceeb, #0f0) !important;
+    color: #000 !important;
+}
+
+body.dark td.eid.today {
+    color: #fff !important;
+}
+
+body td.ashura.today {
+    background: linear-gradient(#87ceeb, #800080);
+    color: #000 !important;
+}
+
+body.dark td.ashura.today {
+    color: #fff !important;
+}
+
+body td.ashura_adjacent.today {
+    background: linear-gradient(#87ceeb, #355e3b);
+    color: #000 !important;
+}
+
+body.dark td.ashura_adjacent.today {
+    color: #fff !important;
+}
+
+body td.arafah.today {
+    background: linear-gradient(#87ceeb, #eccca2);
+    color: #fff !important;
+}
+
+body.dark td.arafah.today {
+    color: #000 !important;
+}
+
+body td.eid.tomorrow {
+    background: linear-gradient(#f54040, #0f0);
+    color: #000 !important;
+}
+
+body.dark td.eid.tomorrow {
+    color: #fff !important;
+}
+
+body td.white_day.tomorrow {
+    color: #f54040 !important;
+}
+
+body td.ashura.tomorrow {
+    background: linear-gradient(#f54040, #800080);
+    color: #000 !important;
+}
+
+body.dark td.ashura.tomorrow {
+    color: #fff !important;
+}
+
+body td.ashura_adjacent.tomorrow {
+    background: linear-gradient(#f54040, #355e3b);
+    color: #000 !important;
+}
+
+body.dark td.ashura_adjacent.tomorrow {
+    color: #fff !important;
+}
+
+body td.arafah.tomorrow {
+    background: linear-gradient(#f54040, #eccca2);
+    color: #000 !important;
+}
+
+body.dark td.arafah.tomorrow {
+    color: #fff !important;
+}
+
+body td.observe.today {
+    background: linear-gradient(#87ceeb, #ffa500);
+    color: #000 !important;
+}
+
+body.dark td.observe.today {
+    color: #fff !important;
+}
+
+body td.observe.tomorrow {
+    background: linear-gradient(#f54040, #ffa500);
+    color: #000 !important;
+}
+
+body.dark td.observe.tomorrow {
+    color: #fff !important;
 }

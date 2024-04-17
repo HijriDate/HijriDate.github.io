@@ -9,14 +9,52 @@ function getHijriOffset(day, start) {
     return diff + start.getDay();
 }
 
-function setToday(day, start) {
+function removeInline() {
+    document.querySelectorAll('.inline').forEach(inline => {
+        inline.classList.remove('inline');
+    });
+}
+
+function showIndicator(indicator) {
+    document.querySelectorAll(indicator).forEach(eid => {
+        eid.classList.add('inline');
+    });
+}
+
+function highlight(day, start) {
+    let cells = document.querySelectorAll('td');
     let offset = getHijriOffset(day, start);
     if (offset !== -1) {
-        let cells = document.querySelectorAll('td');
         let today = cells[offset];
         let tomorrow = cells[offset + 1];
         today.classList.add('today');
         tomorrow.classList.add('tomorrow');
+        cells[day + 28].classList.add('observe');
+    }
+
+    let white_days = [...cells].slice(day + 12, day + 15);
+    white_days.forEach(white_day => {
+        white_day.classList.add('white_day');
+    });
+
+    removeInline();
+    switch(curr_month) {
+        case month_names[9]:
+            cells[day].classList.add('eid');
+            showIndicator('#eid');
+            break;
+        case month_names[11]:
+            cells[day + 8].classList.add('arafah');
+            cells[day + 9].classList.add('eid');
+            showIndicator('#arafah');
+            showIndicator('#eid');
+            break;
+        case month_names[0]:
+            cells[day + 9].classList.add('ashura');
+            cells[day + 8].classList.add('ashura_adjacent');
+            cells[day + 10].classList.add('ashura_adjacent');
+            showIndicator('#ashura');
+            break;
     }
 }
 
@@ -107,7 +145,7 @@ function createGrid(day, start) {
     function tableStatesListener(state, prevState) {
         if (prevState.status < state.status) {
             if (prevState.status === 2 && state.status === 3) {
-                setToday(curr_day, curr_start);
+                highlight(curr_day, curr_start);
             }
         }
     }
@@ -144,6 +182,7 @@ function setTheme() {
 }
 
 let offset = 0;
+let curr_month = null;
 let curr_day = 0;
 let curr_start = null;
 function back() {
@@ -164,7 +203,6 @@ function render() {
     grid.updateConfig({
         data: rows
     }).forceRender();
-    //setToday(curr_day, curr_start);
 }
 
 function select() {
@@ -213,6 +251,7 @@ function setupCalendar(initial) {
     let group_data = dates[selected];
     let keys = getKeys(group_data);
     let name = month_names[parseInt(keys[1]) - 1];
+    curr_month = name;
     let title = document.querySelector('span.date');
     if (!name) {
         offset = 0;
