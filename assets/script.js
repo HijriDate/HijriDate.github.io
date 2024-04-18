@@ -2,7 +2,7 @@ let dates = null;
 
 function getHijriOffset(day, start) {
     let today = new Date();
-    let diff = Math.round((today.getTime() - start.getTime()) / (1000 * 3600 * 24)) - 1;
+    let diff = Math.ceil(Math.abs(today - start) / (1000 * 3600 * 24)) - 1;
     if (diff > 30) {
         return -1;
     }
