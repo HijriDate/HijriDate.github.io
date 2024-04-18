@@ -318,3 +318,7 @@ body td.observe.tomorrow {
 body.dark td.observe.tomorrow {
     color: #fff !important;
 }
+
+body td.adjacent {
+    color: #808080 !important;
+}

@@ -23,6 +23,18 @@ function showIndicator(indicator) {
 
 function highlight(day, start) {
     let cells = document.querySelectorAll('td');
+    let before = [...cells].slice(0, day);
+    before.forEach(element => {
+        element.classList.add('adjacent');
+    });
+    let end = 29;
+    if (has_thirty) {
+        end = 30;
+    }
+    let after = [...cells].slice(end + day, 42);
+    after.forEach(element => {
+        element.classList.add('adjacent');
+    });
     let offset = getHijriOffset(day, start);
     if (offset !== -1) {
         let today = cells[offset];
@@ -82,10 +94,47 @@ function getRow(day, row) {
 
 function getRows(day) {
     let row_one = [];
+    let mth_index = parseInt(month_names.indexOf(curr_month));
+    let group = document.querySelector('select.orgs').value;
+    let has_previous = true;
+    let year = curr_year;
+    if (mth_index > 0) {
+        let months = Object.getOwnPropertyNames(dates[group][year]);
+        let index = months.indexOf(String(mth_index + 1));
+        if (index === -1) {
+            has_previous = false;
+        }
+    } else {
+        year = String(parseInt(year) - 1);
+        let years = Object.getOwnPropertyNames(dates[group]);
+        let index = years.indexOf(year);
+        mth_index = '12';
+        if (index === -1) {
+            has_previous = false;
+        }
+    }
+
+    let diff = 0;
+    if (has_previous) {
+        let prev_date = dates[group][year][mth_index];
+        let prev_split = prev_date.split('/');
+        let prev = new Date(`${prev_split[1]}/${prev_split[0]}/${prev_split[2]}`);
+        let current = dates[group][curr_year][String(month_names.indexOf(curr_month) + 1)];
+        let current_split = current.split('/');
+        let current_date = new Date(`${current_split[1]}/${current_split[0]}/${current_split[2]}`);
+        diff = Math.round((current_date.getTime() - prev.getTime()) / (1000 * 3600 * 24));
+    }
+
+    let count = 1 - day;
     for (let i = 0; i < 7; i++) {
         if (day > 0) {
             if (i < day) {
-                row_one.push("");
+                if (has_previous) {
+                    row_one.push(diff + count);
+                    count += 1;
+                } else {
+                    row_one.push("");
+                }
             } else {
                 row_one.push(`${i - day + 1}`);
             }
@@ -113,6 +162,27 @@ function getRows(day) {
             row_five.push('30');
         } else {
             row_six[0] = '30';
+        }
+    }
+
+    if (back_cycle !== 0) {
+        let row_five_offset = 0;
+        if (row_five.length !== 7) {
+            let len = row_five.length;
+            for (let i = row_five.length; i < 7; i++) {
+                row_five[i] = i - len + 1;
+                row_five_offset += 1;
+            }
+        }
+
+        let row_six_offset = 0;
+        if (row_six[0] === '⠀') {
+            row_six[0] = row_five_offset + 1;
+            row_six_offset += 1;
+        }
+
+        for (let i = 1; i < 7; i++) {
+            row_six.push(row_five_offset + row_six_offset + i);
         }
     }
 
@@ -182,16 +252,20 @@ function setTheme() {
 }
 
 let offset = 0;
+let curr_year = null;
 let curr_month = null;
 let curr_day = 0;
 let curr_start = null;
+let back_cycle = 0;
 function back() {
     offset += 1;
+    back_cycle += 1;
     render();
 }
 
 function forward() {
     offset -= 1;
+    back_cycle -= 1;
     render();
 }
 
@@ -252,6 +326,7 @@ function setupCalendar(initial) {
     let keys = getKeys(group_data);
     let name = month_names[parseInt(keys[1]) - 1];
     curr_month = name;
+    curr_year = keys[0];
     let title = document.querySelector('span.date');
     if (!name) {
         offset = 0;
