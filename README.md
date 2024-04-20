@@ -1,7 +1,7 @@
 <div align="center">
     <img src="https://github.com/HijriDate/HijriDate.github.io/blob/master/favicon.png" />
     <br />
-    <strong><i>A hijri calendar website to help keep track of the current hijri date based on real sighting data from moon sighting organisations around the world. Visite the site <a href="https://hijridate.github.io">here</a>.</i></strong>
+    <strong><i>A hijri calendar website to help keep track of the current hijri date based on real sighting data from moon sighting organisations around the world. Visit the site <a href="https://hijridate.github.io">here</a>.</i></strong>
 </div>
 
 # Features
