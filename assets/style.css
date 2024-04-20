@@ -198,6 +198,10 @@ body td.observe {
     display: inline !important;
 }
 
+.key.inline {
+    display: inline-block !important;
+}
+
 body span.arafah {
     background: #eccca2;
     color: #eccca2;
