@@ -14,6 +14,10 @@
 
 4: A list of moonsightings organisations are available and you can switch to and from the calendar of any given organisation. Data is available [here](https://raw.githubusercontent.com/AbdullahM0hamed/HilalMonths/master/hilal-months.json)
 
+# Wish to see another Moonsighting organisation added?
+
+Please open an issue on this repository or on https://github.com/AbdullahM0hamed/HilalMonths. Please note that as of now I only plan to accept organisations that make announcements every month and are reliable year-round, though this may change in the future.
+
 # Screenshots
 
 <img align="center" src="https://github.com/HijriDate/HijriDate.github.io/blob/master/screenshots/light.jpg" />
