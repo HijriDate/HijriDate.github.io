@@ -100,7 +100,7 @@ function getRows(day) {
     let year = curr_year;
     if (mth_index > 0) {
         let months = Object.getOwnPropertyNames(dates[group][year]);
-        let index = months.indexOf(String(mth_index + 1));
+        let index = months.indexOf(String(mth_index));
         if (index === -1) {
             has_previous = false;
         }
@@ -116,6 +116,7 @@ function getRows(day) {
 
     let diff = 0;
     if (has_previous) {
+        document.querySelector('img.back').style.display = 'block';
         let prev_date = dates[group][year][mth_index];
         let prev_split = prev_date.split('/');
         let prev = new Date(`${prev_split[1]}/${prev_split[0]}/${prev_split[2]}`);
@@ -123,6 +124,8 @@ function getRows(day) {
         let current_split = current.split('/');
         let current_date = new Date(`${current_split[1]}/${current_split[0]}/${current_split[2]}`);
         diff = Math.round((current_date.getTime() - prev.getTime()) / (1000 * 3600 * 24));
+    } else {
+        document.querySelector('img.back').style.display = 'none';
     }
 
     let count = 1 - day;
