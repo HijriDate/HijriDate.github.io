@@ -1,9 +1,15 @@
 let dates = null;
 
 function getHijriOffset(day, start) {
-    let today = new Date();
+    //let today = new Date();
+    let today = new Date("05/09/2024"); 
     let diff = Math.ceil(Math.abs(today - start) / (1000 * 3600 * 24)) - 1;
-    if (diff > 30) {
+    //alert(day) //5
+    //alert(start) //Fri May 10
+    //alert(today) //Thu May 09
+    //alert(diff) //0
+    //alert(today < start)
+    if (diff > 30 || today < start) {
         return -1;
     }
     return diff + start.getDay();
