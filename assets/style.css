@@ -327,3 +327,7 @@ body.dark td.observe.tomorrow {
 body td.adjacent {
     color: #808080 !important;
 }
+
+span.gregorian {
+    color: #808080 !important;
+}
