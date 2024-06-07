@@ -115,11 +115,11 @@ body.dark th {
     color: #eee;
 }
 
-body td.today, body.dark td.today {
+body td.today, body.dark td.today span {
     color: #87ceeb !important;
 }
 
-body td.tomorrow, body.dark td.tomorrow {
+body td.tomorrow, body.dark td.tomorrow span {
     color: #f54040;
 }
 
@@ -130,10 +130,13 @@ body td.white_day {
 
 body.dark td.white_day {
     background: #fff;
+}
+
+body.dark td.white_day span {
     color: #000;
 }
 
-body td.eid, body.dark td.eid {
+body td.eid, body.dark td.eid span {
     color: #0f0;
 }
 
@@ -208,7 +211,7 @@ body span.arafah {
     color: #eccca2;
 }
 
-body td.arafah {
+body td.arafah, body.dark td.arafah span {
     color: #eccca2;
 }
 
@@ -222,11 +225,11 @@ body span.ashura_adjacent {
     color: #355e3b;
 }
 
-body td.ashura {
+body td.ashura, body.dark td.ashura span {
     color: #800080;
 }
 
-body td.ashura_adjacent {
+body td.ashura_adjacent, body.dark td.ashura_adjacent span {
     color: #355e3b;
 }
 
@@ -235,7 +238,7 @@ body td.eid.today {
     color: #000 !important;
 }
 
-body.dark td.eid.today {
+body.dark td.eid.today span {
     color: #fff !important;
 }
 
@@ -244,7 +247,7 @@ body td.ashura.today {
     color: #000 !important;
 }
 
-body.dark td.ashura.today {
+body.dark td.ashura.today span {
     color: #fff !important;
 }
 
@@ -253,7 +256,7 @@ body td.ashura_adjacent.today {
     color: #000 !important;
 }
 
-body.dark td.ashura_adjacent.today {
+body.dark td.ashura_adjacent.today span {
     color: #fff !important;
 }
 
@@ -262,7 +265,7 @@ body td.arafah.today {
     color: #fff !important;
 }
 
-body.dark td.arafah.today {
+body.dark td.arafah.today span {
     color: #000 !important;
 }
 
@@ -271,7 +274,7 @@ body td.eid.tomorrow {
     color: #000 !important;
 }
 
-body.dark td.eid.tomorrow {
+body.dark td.eid.tomorrow span {
     color: #fff !important;
 }
 
@@ -284,7 +287,7 @@ body td.ashura.tomorrow {
     color: #000 !important;
 }
 
-body.dark td.ashura.tomorrow {
+body.dark td.ashura.tomorrow span {
     color: #fff !important;
 }
 
@@ -293,7 +296,7 @@ body td.ashura_adjacent.tomorrow {
     color: #000 !important;
 }
 
-body.dark td.ashura_adjacent.tomorrow {
+body.dark td.ashura_adjacent.tomorrow span {
     color: #fff !important;
 }
 
@@ -302,7 +305,7 @@ body td.arafah.tomorrow {
     color: #000 !important;
 }
 
-body.dark td.arafah.tomorrow {
+body.dark td.arafah.tomorrow span {
     color: #fff !important;
 }
 
@@ -311,7 +314,7 @@ body td.observe.today {
     color: #000 !important;
 }
 
-body.dark td.observe.today {
+body.dark td.observe.today span {
     color: #fff !important;
 }
 
@@ -320,14 +323,58 @@ body td.observe.tomorrow {
     color: #000 !important;
 }
 
-body.dark td.observe.tomorrow {
+body.dark td.observe.tomorrow span {
     color: #fff !important;
 }
 
-body td.adjacent {
+body td.adjacent, body.dark td.adjacent span {
     color: #808080 !important;
 }
 
 span.gregorian {
     color: #808080 !important;
+}
+
+div.gregorian span {
+    float: left;
+    display: inline;
+    font-size: 0.3em;
+}
+
+div.gregorian {
+    display: inline-block;
+}
+
+body span.hijri_day {
+    padding: 12px 24px !important;
+}
+
+td {
+    padding: 0px 0px 12px 0px !important;
+    border-style: none;
+}
+
+span.greg_month {
+    padding-left: 0.4em;
+    padding-top: 0.4em;
+}
+
+span.box.day {
+    border-bottom-style: solid;
+    border-right-style: solid;
+    border-color: #e6e7eb;
+    border-width: 1px;
+    padding: 0.4em;
+}
+
+div.gridjs-wrapper {
+    overflow-x: hidden;
+}
+
+td:not(:has(span)) {
+    padding: 12px 24px;
+}
+
+td.adjacent.today span, body.dark td.adjacent.today span {
+    color: #6ca4bc !important;
 }

@@ -9,6 +9,16 @@ function getHijriOffset(day, start) {
     return diff + start.getDay();
 }
 
+function getTomorrowOffset(day, start) {
+    let tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    let diff = Math.ceil(Math.abs(tomorrow - start) / (1000 * 3600 * 24)) - 1;
+    if (diff > 30 || tomorrow < start) {
+        return -1;
+    }
+    return diff + start.getDay();
+}
+
 function removeInline() {
     document.querySelectorAll('.inline').forEach(inline => {
         inline.classList.remove('inline');
@@ -42,6 +52,15 @@ function highlight(day, start) {
         today.classList.add('today');
         tomorrow.classList.add('tomorrow');
         cells[day + 28].classList.add('observe');
+    }
+
+    let tom_offset = getTomorrowOffset(day, start);
+    if (offset === -1 && tom_offset !== -1) {
+        let tomorrow = cells[tom_offset];
+        tomorrow.classList.add('tomorrow');
+        if (tom_offset > 0) {
+            cells[tom_offset - 1].classList.add('today');
+        }
     }
 
     let white_days = [...cells].slice(day + 12, day + 15);
@@ -80,19 +99,27 @@ function toggleTheme(checked) {
     }
 }
 
-function getRow(day, row) {
+function getDayHtml(start, num) {
+    let day = new Date(start);
+    day.setDate(day.getDate() + num - 1);
+    return gridjs.html(`<div class="gregorian"><span class="box day">${day.getDate()}</span><span class="greg_month">${greg_months[day.getMonth()]} ${day.getFullYear()}</span></div><div><span class="hijri_day">${num}</span></div>`)
+}
+
+row_four_end = 0;
+function getRow(first, day, row) {
     let current_row = [];
     let row_one_end = 7 - day;
     let num = row - 2;
     let initial = row_one_end + (num * 7) + 1;
+    row_four_end = initial + 7;
     for (let i = initial; i < initial + 7; i++) {
-        current_row.push(i);
+        current_row.push(getDayHtml(first, i));
     }
 
     return current_row;
 }
 
-function getRows(day) {
+function getRows(first, day) {
     let row_one = [];
     let mth_index = parseInt(month_names.indexOf(curr_month));
     let group = document.querySelector('select.orgs').value;
@@ -115,11 +142,12 @@ function getRows(day) {
     }
 
     let diff = 0;
+    let prev = null;
     if (has_previous) {
         document.querySelector('img.back').style.display = 'block';
         let prev_date = dates[group][year][mth_index];
         let prev_split = prev_date.split('/');
-        let prev = new Date(`${prev_split[1]}/${prev_split[0]}/${prev_split[2]}`);
+        prev = new Date(`${prev_split[1]}/${prev_split[0]}/${prev_split[2]}`);
         let current = dates[group][curr_year][String(month_names.indexOf(curr_month) + 1)];
         let current_split = current.split('/');
         let current_date = new Date(`${current_split[1]}/${current_split[0]}/${current_split[2]}`);
@@ -133,59 +161,78 @@ function getRows(day) {
         if (day > 0) {
             if (i < day) {
                 if (has_previous) {
-                    row_one.push(diff + count);
+                    row_one.push(getDayHtml(prev, diff + count));
                     count += 1;
                 } else {
                     row_one.push("");
                 }
             } else {
-                row_one.push(`${i - day + 1}`);
+                row_one.push(getDayHtml(first, i - day + 1));
             }
         } else {
-            row_one = [1,2,3,4,5,6,7];
+            row_one = [
+                getDayHtml(first, 1),
+                getDayHtml(first, 2),
+                getDayHtml(first, 3),
+                getDayHtml(first, 4),
+                getDayHtml(first, 5),
+                getDayHtml(first, 6),
+                getDayHtml(first, 7)
+            ];
             break;
         }
     }
 
-    let row_two = getRow(day, 2);
-    let row_three = getRow(day, 3);
-    let row_four = getRow(day, 4);
+    let row_two = getRow(first, day, 2);
+    let row_three = getRow(first, day, 3);
+    let row_four = getRow(first, day, 4);
     let row_five = [];
-    let row_six = ['⠀'];
-    let start = row_four[row_four.length - 1] + 1;
-    for (let i = start; i < start + 7; i++) {
-        row_five.push(i);
+    let empty = gridjs.html(`<div class="gregorian"><span class="box day" style="border: none; color: rgba(0,0,0,0) !important; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;">7</span><span class="greg_month" style="color: rgba(0,0,0,0) !important; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;">6</span></div><div><span class="hijri_day" style="color: rgba(0,0,0,0) !important; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;">5</span></div>`);
+    let row_six = [empty];
+
+    for (let i = row_four_end; i < row_four_end + 7; i++) {
+        row_five.push(getDayHtml(first, i));
         if (i == 29) {
             break;
         }
     }
 
-    if (has_thirty) {
+    if (has_thirty && back_cycle != 0) {
         if (day !== 6) {
-            row_five.push('30');
+            row_five.push(getDayHtml(first, 30));
         } else {
-            row_six[0] = '30';
+            row_six[0] = getDayHtml(first, 30);
         }
     }
 
     if (back_cycle !== 0) {
+        let next = null;
+        let month = month_names.indexOf(curr_month) + 1;
+        if (month == 12) {
+            next = dates[group][(parseInt(curr_year)+1).toString()]["1"];
+        } else {
+            next = dates[group][curr_year][(month + 1).toString()];
+        }
+
+        let next_split = next.split('/');
+        let next_date = new Date(`${next_split[1]}/${next_split[0]}/${next_split[2]}`);
         let row_five_offset = 0;
         if (row_five.length !== 7) {
             let len = row_five.length;
             for (let i = row_five.length; i < 7; i++) {
-                row_five[i] = i - len + 1;
+                row_five[i] = getDayHtml(next_date, i - len + 1);
                 row_five_offset += 1;
             }
         }
 
         let row_six_offset = 0;
-        if (row_six[0] === '⠀') {
-            row_six[0] = row_five_offset + 1;
+        if (row_six[0] === empty) {
+            row_six[0] = getDayHtml(next_date, row_five_offset + 1);
             row_six_offset += 1;
         }
 
         for (let i = 1; i < 7; i++) {
-            row_six.push(row_five_offset + row_six_offset + i);
+            row_six.push(getDayHtml(next_date, row_five_offset + row_six_offset + i));
         }
     }
 
@@ -194,7 +241,7 @@ function getRows(day) {
 
 let grid = null;
 function createGrid(day, start) {
-    let rows = getRows(day);
+    let rows = getRows(start, day);
     grid = new gridjs.Grid({
         columns: [
             { name: "Sun", width: '5%' },
@@ -241,6 +288,21 @@ let month_names = [
     "Dhul Ḥijjah"
 ]
 
+let greg_months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+]
+
 function setTheme() {
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
     const currentTheme = localStorage.getItem("theme");
@@ -276,7 +338,7 @@ let has_thirty = false;
 function render() {
     const table = document.getElementById('table');
     setupCalendar(false);
-    let rows = getRows(curr_day);
+    let rows = getRows(curr_start, curr_day);
     grid.updateConfig({
         data: rows
     }).forceRender();
