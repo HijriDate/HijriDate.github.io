@@ -194,7 +194,7 @@ body span.observe.key {
     color: #ffa500;
 }
 
-body td.observe {
+body td.observe, body.dark td.observe span {
     color: #ffa500;
 }
 
