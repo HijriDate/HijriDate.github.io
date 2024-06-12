@@ -2,7 +2,7 @@
     <head>
         <title>Hijri Date: based on moon sightings</title>
         <meta charset="UTF-8">
-        <meta name="description" content="A hijri calendar website to help keep track of the current hijri date based on real sighting data from moon sighting organisations around the world.">
+        <meta name="description" content="A hijri calendar website to help keep track of the current hijri date based on real sighting data from moon sighting organisations around the world. Also contains a gregorian to hijri date converter.">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/assets/style.css" type="text/css">
         <script src="/assets/script.js"></script>
@@ -62,6 +62,16 @@
             <img src="/assets/icons/chevron_right.svg" class="forward" onclick="forward();" />
         </div>
         <div id="table"></div>
+        <br />
+        <div class="greg_convert">
+            <h2>Gregorian to Hijri</h2>
+            <select name="year" class="year" onchange="setupMonths();"></select>
+            <select name="month" class="month" onchange="setupDays();"></select>
+            <select name="day" class="day"></select>
+            <br />
+            <p class="converted hidden"></p>
+            <button class="convert" onclick="convert();">Convert</button>
+        </div>
         <br />
         <div class="keys">
             <span class="today_key key">00</span>

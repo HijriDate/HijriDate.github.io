@@ -1,5 +1,89 @@
 let dates = null;
 
+function getConvertedHijriDate(conv_date) {
+    let group = document.querySelector('select.orgs').value;
+    let group_data = dates[group];
+    let years = Object.getOwnPropertyNames(group_data);
+    for (let i = 0; i < years.length; i++) {
+        let year_data = group_data[years[i]];
+        let months = Object.getOwnPropertyNames(year_data);
+        let latest_split = year_data[months[months.length - 1]].split('/');
+        let latest = new Date(`${latest_split[1]}/${latest_split[0]}/${latest_split[2]}`);
+        latest.setDate(latest.getDate() + 28);
+
+        let next = null;
+
+        if (i < years.length - 1) {
+            let next_year = group_data[years[i + 1]];
+            let next_months = Object.getOwnPropertyNames(next_year);
+            let next_split = next_year[next_months[0]].split('/');
+            next = new Date(`${next_split[1]}/${next_split[0]}/${next_split[2]}`);
+            next.setDate(next.getDate() - 1);
+        }
+
+        let end = i === years.length - 1 ? latest : next;
+        let start_split = year_data[months[0]].split('/');
+        let start = new Date(`${start_split[1]}/${start_split[0]}/${start_split[2]}`);
+
+        if (conv_date >= start && conv_date <= end) {
+            for (let j = 0; j < months.length; j++) {
+                let month_start_split = year_data[months[j]].split('/');
+                let month_start = new Date(`${month_start_split[1]}/${month_start_split[0]}/${month_start_split[2]}`);
+                let month_end = null;
+
+                if (j === months.length - 1) {
+                    if (i < years.length - 1) {
+                        let next_year = group_data[years[i + 1]];
+                        let next_months = Object.getOwnPropertyNames(next_year);
+                        let next_year_start = next_year[next_months[0]].split('/');
+                        month_end = new Date(`${next_year_start[1]}/${next_year_start[0]}/${next_year_start[2]}`);
+                        month_end.setDate(month_end.getDate() - 1);
+                    } else {
+                        month_end = new Date(month_start);
+                        month_end.setDate(month_end.getDate() + 28);
+                    }
+                } else {
+                    let next_month_split = year_data[months[j + 1]].split('/');
+                    month_end = new Date(`${next_month_split[1]}/${next_month_split[0]}/${next_month_split[2]}`);
+                    month_end.setDate(month_end.getDate() - 1);
+                }
+
+                const dayLength = 1000 * 60 * 60 * 24;
+                let month_diff = ((month_end.getTime() - month_start.getTime()) / dayLength) + 1;
+
+                conv_date.setHours(0);
+                conv_date.setMinutes(0);
+                conv_date.setSeconds(0);
+
+                month_start.setHours(0);
+                month_start.setMinutes(0);
+                month_start.setSeconds(0);
+
+                month_end.setHours(0);
+                month_end.setMinutes(0);
+                month_end.setSeconds(0);
+
+                if (conv_date >= month_start && conv_date <= month_end) {
+                    let diff = Math.round((((conv_date.getTime() - month_start.getTime()) / dayLength)) + 1);
+                    let converted = `Converted: ${diff} ${month_names[j]} ${years[i]}`;
+                    return converted;
+                }
+            }
+        }
+    }
+}
+
+function convert() {
+    let day = document.querySelector('select.day').value;
+    let month = document.querySelector('select.month').value;
+    let year = document.querySelector('select.year').value;
+    let conv_date = new Date(`${month}/${day}/${year}`);
+    let conv_text = getConvertedHijriDate(conv_date);
+    let converted = document.querySelector('p.converted');
+    converted.classList.remove('hidden');
+    converted.innerText = conv_text;
+}
+
 function getHijriOffset(day, start) {
     let today = new Date();
     let diff = Math.ceil(Math.abs(today - start) / (1000 * 3600 * 24)) - 1;
@@ -303,6 +387,21 @@ let greg_months = [
     "Dec"
 ]
 
+let greg_months_full = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+];
+
 function setTheme() {
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
     const currentTheme = localStorage.getItem("theme");
@@ -350,6 +449,9 @@ function select() {
     render();
 }
 
+function selectDay() {
+}
+
 function getKeys(group_data) {
     let years = Object.getOwnPropertyNames(group_data);
     let count = 0;
@@ -377,7 +479,7 @@ function hasThirty(start, next) {
     return diff === 30;
 }
 
-function setupCalendar(initial) {
+function getSelected() {
     let select = document.querySelector("select.orgs");
     let selected = localStorage.getItem('org');
     let options = [...select.options].map(x => x.value);
@@ -387,7 +489,157 @@ function setupCalendar(initial) {
         select.value = selected;
     }
 
+    return selected;
+}
+
+function getExtremes() {
+    let year_select = document.querySelector('select.year');
+    let year = year_select.value;
+    let options = [...year_select.options];
+    let latest = options[0].value;
+    let earliest = options[options.length - 1].value;
+
+    return [year, earliest, latest];
+}
+
+function setupMonths() {
+    //let year_select = document.querySelector('select.year');
+    //let year = year_select.value;
+    //let options = [...year_select.options];
+    //let latest = options[0].value;
+    //let earliest = options[options.length - 1].value;
+    const [year, earliest, latest] = getExtremes();
+    let month_select = document.querySelector('select.month');
+    month_select.options.length = 0;
+    let min = 0;
+    let max = 12;
+
+    let group_data = dates[getSelected()];
+    if (year === latest) {
+        let years = Object.getOwnPropertyNames(group_data);
+        let year =  group_data[years[years.length - 1]];
+        let months = Object.getOwnPropertyNames(year);
+        let month = months[months.length - 1];
+        let date = year[month];
+        let date_split = date.split('/');
+        let date_end = new Date(`${date_split[1]}/${date_split[0]}/${date_split[2]}`);
+        date_end.setDate(date_end.getDate() + 28);
+        max = date_end.getMonth() + 1;
+    }
+
+    if (year === earliest) {
+        let years = Object.getOwnPropertyNames(group_data);
+        let year =  group_data[years[0]];
+        let months = Object.getOwnPropertyNames(year);
+        let month = months[0];
+        let date = year[month];
+        min = parseInt(date.split('/')[1]) - 1;
+    }
+
+    for (let i = min; i < max; i++) {
+        let option = document.createElement('option');
+        let greg_mth = greg_months_full[i];
+        option.value = greg_mth;
+        option.text = greg_mth;
+        month_select.options.add(option);
+    }
+
+    setupDays();
+}
+
+function setupDays() {
+    const [year, earliest, latest] = getExtremes();
+    let month_select = document.querySelector('select.month');
+
+    let month = greg_months_full.indexOf(month_select.value);
+
+    let max = 32;
+    if ([3, 5, 8, 10].includes(month)) {
+        max = 31;
+    }
+
+    if (month === 1) {
+       let year = parseInt(document.querySelector('select.year').value);
+        if (year % 4 === 0 && !(year % 100 === 0 && year % 1000 !== 0)) {
+            max = 30;
+        }
+    }
+
+    let day_select = document.querySelector('select.day');
+    day_select.options.length = 0;
+
+    if (year === latest) {
+        let months = [...month_select.options];
+        let latest_month = months[months.length - 1].value;
+        if (month_select.value === latest_month) {
+            let org = document.querySelector('select.orgs').value;
+            let group_data = dates[org];
+            let years = Object.getOwnPropertyNames(group_data);
+            let latest_year = years[years.length - 1];
+            let year_data = group_data[latest_year];
+            let months = Object.getOwnPropertyNames(year_data);
+            let latest_month = months[months.length - 1];
+            let date_split = year_data[latest_month].split('/');
+            let date = new Date(`${date_split[1]}/${date_split[0]}/${date_split[2]}`);
+            date.setDate(date.getDate() + 28);
+            max = date.getDay() + 1;
+        }
+    }
+
+    let min = 1;
+    if (year === earliest) {
+        let months = [...month_select.options];
+        let earliest_month = months[0].value;
+        if (month_select.value === earliest_month) {
+            let org = document.querySelector('select.orgs').value;
+            let group_data = dates[org];
+            let years = Object.getOwnPropertyNames(group_data);
+            let earliest_year = years[0];
+            let year_data = group_data[earliest_year];
+            let months = Object.getOwnPropertyNames(year_data);
+            let earliest_month = months[0];
+            let date_split = year_data[earliest_month].split('/');
+            let date = new Date(`${date_split[1]}/${date_split[0]}/${date_split[2]}`);
+            min = parseInt(date.toDateString().split(' ')[2]);
+        }
+    }
+
+    for (let i = min; i < max; i++) {
+        let option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        day_select.options.add(option);
+    }
+}
+
+function setupCalendar(initial) {
+    let selected = getSelected();
     let group_data = dates[selected];
+    let year_list = Object.getOwnPropertyNames(group_data);
+    let latest = year_list[year_list.length - 1];
+    let earliest = year_list[0];
+    let latest_months = Object.getOwnPropertyNames(group_data[latest]);
+    let latest_month = latest_months[latest_months.length - 1];
+    let latest_split = group_data[latest][latest_month].split('/');
+    let latest_date = new Date(`${latest_split[1]}/${latest_split[0]}/${latest_split[2]}`);
+
+    let earliest_months = Object.getOwnPropertyNames(group_data[earliest]);
+    let earliest_month = earliest_months[0];
+    let earliest_split = group_data[earliest][earliest_month].split('/');
+    let earliest_date = new Date(`${earliest_split[1]}/${earliest_split[0]}/${earliest_split[2]}`);
+
+    let year_select = document.querySelector('select.year');
+    year_select.options.length = 0;
+    for (let i = parseInt(latest_date.getFullYear()); i >= parseInt(earliest_date.getFullYear()); i--) {
+        let option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        year_select.options.add(option);
+    }
+
+    setupMonths();
+    setupDays();
+
     let keys = getKeys(group_data);
     let name = month_names[parseInt(keys[1]) - 1];
     curr_month = name;

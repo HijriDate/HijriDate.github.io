@@ -23,7 +23,7 @@ div.toggle {
     align-items: center;
 }
 
-select.orgs {
+select {
     border-radius: 10px;
     font-size: 0.8em;
 }
@@ -154,7 +154,7 @@ body.dark div.gridjs-wrapper {
     box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 3px 0px, rgba(255, 255, 255, 0.26) 0px 1px 2px 0px;
 }
 
-body.dark select.orgs {
+body.dark select {
     color: #fff;
     border-color: #eee;
     background: #000;
@@ -377,4 +377,35 @@ td:not(:has(span)) {
 
 td.adjacent.today span, body.dark td.adjacent.today span {
     color: #6ca4bc !important;
+}
+
+button {
+    border-radius: 10px !important;
+    border-style: solid;
+    border-width: 0.1em;
+    margin-top: 0.4em;
+}
+
+body.dark button {
+    border-color: #eee;
+    color: #fff;
+    background: #000;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 0.2em;
+}
+
+body.dark h2 {
+    color: #fff;
+}
+
+p.hidden {
+    display: none;
+    margin: 0;
+}
+
+p {
+    margin: 0.3em;
 }
