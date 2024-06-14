@@ -6,6 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/assets/style.css" type="text/css">
         <script src="/assets/script.js"></script>
+        <script src="https://unpkg.com/@popperjs/core@2"></script>
+        <script src="https://unpkg.com/tippy.js@6"></script>
         <script src="https://unpkg.com/gridjs@6.1.0/dist/gridjs.umd.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" type="text/css">
         <link rel="icon" href="/favicon.png" />
@@ -76,35 +78,34 @@
         <div class="keys">
             <span class="today_key key">00</span>
             <span>&nbsp;-&nbsp;</span>
-            <span>Today: post-midnight, pre-sunset</span>
+            <span class="today_exp">Today: post-midnight, pre-sunset</span>
             <span>&nbsp;&nbsp;</span>
             <span class="tomorrow_key key">00</span>
             <span>&nbsp;-&nbsp;</span>
-            <span>Today: pre-midnight, post-sunset</span>
+            <span class="tomorrow_exp">Today: pre-midnight, post-sunset</span>
             <span>&nbsp;&nbsp;</span>
             <span class="white_day key">&nbsp;x&nbsp;</span>
             <span>&nbsp;-&nbsp;</span>
-            <span>White day: recommended to fast</span>
+            <span class="white_day_exp">White day: recommended to fast</span>
             <span>&nbsp;&nbsp;</span>
             <span class="observe key">00</span>
             <span>&nbsp;-&nbsp;</span>
-            <span>The new crescent should be observed after sunset</span>
+            <span class="observe_exp">The new crescent should be observed after sunset</span>
             <span id="arafah" style="display: none;">&nbsp;&nbsp;</span>
             <span id="arafah" class="arafah key" style="display: none;">00</span>
             <span id="arafah" style="display: none;">&nbsp;-&nbsp;</span>
-            <span id="arafah" style="display: none;">Day of Arafah: Fasting recommended</span>
+            <span id="arafah" class="arafah_exp" style="display: none;">Day of Arafah: Fasting recommended</span>
             <span id="eid">&nbsp;&nbsp;</span>
             <span id="eid" class="eid key" style="display: none;">00</span>
             <span id="eid" style="display: none;">&nbsp;-&nbsp;</span>
-            <span id="eid" style="display: none;">Eid</span>
-            <!--<span id="ashura" style="display: none;">&nbsp;&nbsp;</span>-->
+            <span id="eid" class="eid_exp" style="display: none;">Eid</span>
             <span id="ashura" class="ashura key" style="display: none;">00</span>
             <span id="ashura" style="display: none;">&nbsp;-&nbsp;</span>
-            <span id="ashura" style="display: none;">The day of 'Ashura: Fasting recommended</span>
+            <span id="ashura" class="ashura_exp" style="display: none;">The day of 'Ashura: Fasting recommended</span>
             <span id="ashura" style="display: none;">&nbsp;&nbsp;</span>
             <span id="ashura" class="ashura_adjacent key" style="display: none;">00</span>
             <span id="ashura" style="display: none;">&nbsp;-&nbsp;</span>
-            <span id="ashura" style="display: none;">The day before/after 'Ashura: fast one of these along with the day of 'Ashura</span>
+            <span id="ashura" class="ashura_adjacent_exp" style="display: none;">The day before/after 'Ashura: fast one of these along with the day of 'Ashura</span>
         </div>
         <p style="font-size: 0.6em;">*Due to the hijri calendar starting at sunset, and the gregorian calendar starting at midnight, calculating the current day's change without location data is difficult, and as such 2 days are highlighted as 'today' depending on whether it is before or after sunset.</p>
         <p style="font-size: 0.6em;">**Where today is a highlighted day, the background will be a gradient with the top colour indicating that it is today, and the bottom colour being the colour of the highlighted day show its significance - with the exception of the white days wherein the text colour is changed to reflect that it is today</p>

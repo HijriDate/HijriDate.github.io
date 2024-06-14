@@ -120,6 +120,7 @@ function highlight(day, start) {
     let before = [...cells].slice(0, day);
     before.forEach(element => {
         element.classList.add('adjacent');
+        explain(element);
     });
     let end = 29;
     if (has_thirty) {
@@ -128,6 +129,7 @@ function highlight(day, start) {
     let after = [...cells].slice(end + day, 42);
     after.forEach(element => {
         element.classList.add('adjacent');
+        explain(element);
     });
     let offset = getHijriOffset(day, start);
     if (offset !== -1) {
@@ -135,32 +137,41 @@ function highlight(day, start) {
         let tomorrow = cells[offset + 1];
         today.classList.add('today');
         tomorrow.classList.add('tomorrow');
+        explain(today);
+        explain(tomorrow);
         cells[day + 28].classList.add('observe');
+        explain(cells[day + 28]);
     }
 
     let tom_offset = getTomorrowOffset(day, start);
     if (offset === -1 && tom_offset !== -1) {
         let tomorrow = cells[tom_offset];
         tomorrow.classList.add('tomorrow');
+        explain(tomorrow);
         if (tom_offset > 0) {
             cells[tom_offset - 1].classList.add('today');
+            explain(cells[tom_offset - 1]);
         }
     }
 
     let white_days = [...cells].slice(day + 12, day + 15);
     white_days.forEach(white_day => {
         white_day.classList.add('white_day');
+        explain(white_day);
     });
 
     removeInline();
     switch(curr_month) {
         case month_names[9]:
             cells[day].classList.add('eid');
+            explain(cells[day]);
             showIndicator('#eid');
             break;
         case month_names[11]:
             cells[day + 8].classList.add('arafah');
             cells[day + 9].classList.add('eid');
+            explain(cells[day + 8]);
+            explain(cells[day + 9]);
             showIndicator('#arafah');
             showIndicator('#eid');
             break;
@@ -168,6 +179,9 @@ function highlight(day, start) {
             cells[day + 9].classList.add('ashura');
             cells[day + 8].classList.add('ashura_adjacent');
             cells[day + 10].classList.add('ashura_adjacent');
+            explain(cells[day + 8]);
+            explain(cells[day + 9]);
+            explain(cells[day + 10]);
             showIndicator('#ashura');
             break;
     }
@@ -323,6 +337,22 @@ function getRows(first, day) {
     return [row_one, row_two, row_three, row_four, row_five, row_six];
 }
 
+function explain(td) {
+    let explainable = ['today', 'tomorrow', 'white_day', 'observe', 'arafah', 'eid', 'ashura', 'ashura_adjacent'];
+    let intersect = explainable.filter(Set.prototype.has, new Set(td.classList));
+
+    let explanation = '';
+    for (let i = 0; i < intersect.length; i++) {
+        let cls = intersect[i];
+        let exp = document.querySelector(`.${cls}_exp`).innerText;
+        explanation += `${exp} `;
+    }
+
+    if (explanation !== null && explanation.match(/^ *$/) === null) {
+        tippy(td, {'content': explanation, 'placement': 'bottom'});
+    }
+}
+
 let grid = null;
 function createGrid(day, start) {
     let rows = getRows(start, day);
@@ -354,6 +384,7 @@ function createGrid(day, start) {
         }
     }
 
+    //grid.on('cellClick', (e, cell, column, row) => explain(cell["data"]["__e"].parentElement));
     grid.config.store.subscribe(tableStatesListener);
 }
 
@@ -503,11 +534,6 @@ function getExtremes() {
 }
 
 function setupMonths() {
-    //let year_select = document.querySelector('select.year');
-    //let year = year_select.value;
-    //let options = [...year_select.options];
-    //let latest = options[0].value;
-    //let earliest = options[options.length - 1].value;
     const [year, earliest, latest] = getExtremes();
     let month_select = document.querySelector('select.month');
     month_select.options.length = 0;
