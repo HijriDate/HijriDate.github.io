@@ -5,19 +5,28 @@
         <meta name="description" content="A hijri calendar website to help keep track of the current hijri date based on real sighting data from moon sighting organisations around the world. Also contains a gregorian to hijri date converter.">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/assets/style.css" type="text/css">
+        <link rel="stylesheet" href="/assets/languages.css" type="text/css">
+        <script src="/assets/languages.js"></script>
         <script src="/assets/script.js"></script>
+        <script src="/assets/easydropdown.js"></script>
         <script src="https://unpkg.com/@popperjs/core@2"></script>
         <script src="https://unpkg.com/tippy.js@6"></script>
         <script src="https://unpkg.com/gridjs@6.1.0/dist/gridjs.umd.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" type="text/css">
         <link rel="icon" href="/favicon.png" />
     </head>
-    <body>
-        <h1>Hijri Date</h1>
+    <body lang="en">
+        <h1 lang="en">Hijri Date</h1>
+        <h1 lang="so">Taariikhda Hijriga</h1>
+
         <select name="orgs" class="orgs" onchange="select();"></select>
         <br />
         <br />
         <div class="toggle">
+            <select class="langs" onchange="changeLang();">
+                <option class="en">English</option>
+                <option class="so">Somali</option>
+            </select>
             <input type="checkbox" id="darkmode-toggle" onchange="toggleTheme(this.checked)" />
             <label class="darklabel" for="darkmode-toggle">
                 <svg version="1.1" class="sun" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 496 496" style="enable-background:new 0 0 496 496;" xml:space="preserve">
@@ -58,7 +67,7 @@
             </label>
         </div>
         <br />
-        <div>
+        <div class="date_row">
             <img src="/assets/icons/chevron_left.svg" class="back" onclick="back();" />
             <span class="date"></span>
             <img src="/assets/icons/chevron_right.svg" class="forward" onclick="forward();" />
@@ -66,7 +75,8 @@
         <div id="table"></div>
         <br />
         <div class="greg_convert">
-            <h2>Gregorian to Hijri</h2>
+            <h2 lang="en">Gregorian to Hijri</h2>
+            <h2 lang="so">Taariikh Miiladi Taariikh Hijri U Badal</h2>
             <select name="year" class="year" onchange="setupMonths();"></select>
             <select name="month" class="month" onchange="setupDays();"></select>
             <select name="day" class="day"></select>
@@ -78,36 +88,46 @@
         <div class="keys">
             <span class="today_key key">00</span>
             <span>&nbsp;-&nbsp;</span>
-            <span class="today_exp">Today: post-midnight, pre-sunset</span>
+            <span class="today_exp" lang="en">Today: post-midnight, pre-sunset</span>
+            <span class="today_exp" lang="so">Maanta: haddii habaynbar laa dhaafay oo gabaldhac la gaarin</span>
             <span>&nbsp;&nbsp;</span>
             <span class="tomorrow_key key">00</span>
             <span>&nbsp;-&nbsp;</span>
-            <span class="tomorrow_exp">Today: pre-midnight, post-sunset</span>
+            <span class="tomorrow_exp" lang="en">Today: pre-midnight, post-sunset</span>
+            <span class="tomorrow_exp" lang="so">Caawa: hadii qoraxdhac la dhaafay oo habaynbar la gaarin</span>
             <span>&nbsp;&nbsp;</span>
             <span class="white_day key">&nbsp;x&nbsp;</span>
             <span>&nbsp;-&nbsp;</span>
-            <span class="white_day_exp">White day: recommended to fast</span>
+            <span class="white_day_exp" lang="en">White day: recommended to fast</span>
+            <span class="white_day_exp" lang="so">Maalin Cad: waxaa fiican inaad soontid maalintaan</span>
             <span>&nbsp;&nbsp;</span>
             <span class="observe key">00</span>
             <span>&nbsp;-&nbsp;</span>
-            <span class="observe_exp">The new crescent should be observed after sunset</span>
+            <span class="observe_exp" lang="en">The new crescent should be observed after sunset</span>
+            <span class="observe_exp" lang="so">Bisha cusub markay gabalka maalintaan dhacdo baa la raadinaayaa</span>
             <span id="arafah" style="display: none;">&nbsp;&nbsp;</span>
             <span id="arafah" class="arafah key" style="display: none;">00</span>
             <span id="arafah" style="display: none;">&nbsp;-&nbsp;</span>
-            <span id="arafah" class="arafah_exp" style="display: none;">Day of Arafah: Fasting recommended</span>
+            <span id="arafah" class="arafah_exp" style="display: none;" lang="en">Day of Arafah: Fasting recommended</span>
+            <span id="arafah" class="arafah_exp" style="display: none;" lang="so">Maalinta Carafo: inaad soontid baa fiican</span>
             <span id="eid">&nbsp;&nbsp;</span>
             <span id="eid" class="eid key" style="display: none;">00</span>
             <span id="eid" style="display: none;">&nbsp;-&nbsp;</span>
-            <span id="eid" class="eid_exp" style="display: none;">Eid</span>
+            <span id="eid" class="eid_exp" style="display: none;" lang="en">Eid</span>
+            <span id="eid" class="eid_exp" style="display: none;" lang="so">Ciid/Iid</span>
             <span id="ashura" class="ashura key" style="display: none;">00</span>
             <span id="ashura" style="display: none;">&nbsp;-&nbsp;</span>
-            <span id="ashura" class="ashura_exp" style="display: none;">The day of 'Ashura: Fasting recommended</span>
+            <span id="ashura" class="ashura_exp" style="display: none;" lang="en">The day of 'Ashura: Fasting recommended</span>
+            <span id="ashura" class="ashura_exp" style="display: none;" lang="so">Maalinta Caashura: Inaad soontid baa fiican</span>
             <span id="ashura" style="display: none;">&nbsp;&nbsp;</span>
             <span id="ashura" class="ashura_adjacent key" style="display: none;">00</span>
             <span id="ashura" style="display: none;">&nbsp;-&nbsp;</span>
-            <span id="ashura" class="ashura_adjacent_exp" style="display: none;">The day before/after 'Ashura: fast one of these along with the day of 'Ashura</span>
+            <span id="ashura" class="ashura_adjacent_exp" style="display: none;" lang="en">The day before/after 'Ashura: fast one of these along with the day of 'Ashura</span>
+            <span id="ashura" class="ashura_adjacent_exp" style="display: none;" lang="so">Maalinta ka horreysa ama ka danbeysa maalinta caashura, labadan mid kamid soon markad soontid ama soomi rabtid maalinta caashura</span>
         </div>
-        <p style="font-size: 0.6em;">*Due to the hijri calendar starting at sunset, and the gregorian calendar starting at midnight, calculating the current day's change without location data is difficult, and as such 2 days are highlighted as 'today' depending on whether it is before or after sunset.</p>
-        <p style="font-size: 0.6em;">**Where today is a highlighted day, the background will be a gradient with the top colour indicating that it is today, and the bottom colour being the colour of the highlighted day show its significance - with the exception of the white days wherein the text colour is changed to reflect that it is today</p>
+        <p style="font-size: 0.6em;" lang="en">*Due to the hijri calendar starting at sunset, and the gregorian calendar starting at midnight, calculating the current day's change without location data is difficult, and as such 2 days are highlighted as 'today' depending on whether it is before or after sunset.</p>
+        <p style="font-size: 0.6em;" lang="so">*Tariikhda hijriga maalintiisa cusub madaama ey bilaawato qoraxdhacda kadib, iyo tariikhda miiladiga malmeeheeda ey bilowdaan habeynbarka kadib, waxaa adag ina la ogaado maalintey kuu tahay xagga tariikhda hijriga anagoo ogaan meeshaad daggantahay, marka labo malmood baan calaamadinay.</p>
+        <p style="font-size: 0.6em;" lang="en">**Where today is a highlighted day, the background will be a gradient with the top colour indicating that it is today, and the bottom colour being the colour of the highlighted day show its significance - with the exception of the white days wherein the text colour is changed to reflect that it is today</p>
+        <p style="font-size: 0.6em;" lang="so">**Maanta hadduu yahay maaliin calamadsan siida Carafo oo kale, waxaa la muujin midabo isku qasan oo midabka kore uu tusinaayo inuu maanta yahay maalinta calaamadsan, iyo midabka hoose uu tilmaamaayo sababta kale uu u calaamadsan yahay</p>
     </body>
 </html>

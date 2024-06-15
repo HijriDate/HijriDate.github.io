@@ -1,0 +1,7 @@
+body[lang=en] [lang]:not([lang*=en]) {
+    display: none;
+}
+
+body[lang=so] [lang]:not([lang*=so]) {
+    display: none;
+}

@@ -1,5 +1,29 @@
 let dates = null;
 
+function changeLang() {
+    let langs = document.querySelector('select.langs');
+    let language = langs.value;
+    let options = [...langs.options];
+    let lang_code = '';
+    for (let i = 0; i < options.length; i++) {
+        let lang = options[i];
+        if (lang.text === language) {
+            lang_code = lang.classList[0];
+        }
+    }
+
+    document.body.setAttribute('lang', lang_code);
+}
+
+function getLang() {
+    return document.querySelector('body').getAttribute('lang');
+}
+
+const rtl_langs = [];
+function isRtl() {
+    return rtl_langs.includes(getLang());
+}
+
 function getConvertedHijriDate(conv_date) {
     let group = document.querySelector('select.orgs').value;
     let group_data = dates[group];
@@ -65,7 +89,7 @@ function getConvertedHijriDate(conv_date) {
 
                 if (conv_date >= month_start && conv_date <= month_end) {
                     let diff = Math.round((((conv_date.getTime() - month_start.getTime()) / dayLength)) + 1);
-                    let converted = `Converted: ${diff} ${month_names[j]} ${years[i]}`;
+                    let converted = `${getTranslated(getLang(), 'converted')}: ${diff} ${getTranslated(getLang(), 'month_names')[j]} ${years[i]}`;
                     return converted;
                 }
             }
@@ -162,12 +186,12 @@ function highlight(day, start) {
 
     removeInline();
     switch(curr_month) {
-        case month_names[9]:
+        case getTranslated(getLang(), 'month_names')[9]:
             cells[day].classList.add('eid');
             explain(cells[day]);
             showIndicator('#eid');
             break;
-        case month_names[11]:
+        case getTranslated(getLang(), 'month_names')[11]:
             cells[day + 8].classList.add('arafah');
             cells[day + 9].classList.add('eid');
             explain(cells[day + 8]);
@@ -175,7 +199,7 @@ function highlight(day, start) {
             showIndicator('#arafah');
             showIndicator('#eid');
             break;
-        case month_names[0]:
+        case getTranslated(getLang(), 'month_names')[0]:
             cells[day + 9].classList.add('ashura');
             cells[day + 8].classList.add('ashura_adjacent');
             cells[day + 10].classList.add('ashura_adjacent');
@@ -200,7 +224,12 @@ function toggleTheme(checked) {
 function getDayHtml(start, num) {
     let day = new Date(start);
     day.setDate(day.getDate() + num - 1);
-    return gridjs.html(`<div class="gregorian"><span class="box day">${day.getDate()}</span><span class="greg_month">${greg_months[day.getMonth()]} ${day.getFullYear()}</span></div><div><span class="hijri_day">${num}</span></div>`)
+
+    if (isRtl()) {
+        return gridjs.html(`<div class="gregorian"><span class="greg_month">${getTranslated(getLang(), 'greg_months')[day.getMonth()]} ${day.getFullYear()}</span><span class="box day">${day.getDay()}</span></div><div><span class="hijri_day">${num}</span></div>`)
+    }
+
+    return gridjs.html(`<div class="gregorian"><span class="box day">${day.getDate()}</span><span class="greg_month">${getTranslated(getLang(), 'greg_months')[day.getMonth()]} ${day.getFullYear()}</span></div><div><span class="hijri_day">${num}</span></div>`)
 }
 
 row_four_end = 0;
@@ -219,7 +248,7 @@ function getRow(first, day, row) {
 
 function getRows(first, day) {
     let row_one = [];
-    let mth_index = parseInt(month_names.indexOf(curr_month));
+    let mth_index = parseInt(getTranslated(getLang(), 'month_names').indexOf(curr_month));
     let group = document.querySelector('select.orgs').value;
     let has_previous = true;
     let year = curr_year;
@@ -246,7 +275,7 @@ function getRows(first, day) {
         let prev_date = dates[group][year][mth_index];
         let prev_split = prev_date.split('/');
         prev = new Date(`${prev_split[1]}/${prev_split[0]}/${prev_split[2]}`);
-        let current = dates[group][curr_year][String(month_names.indexOf(curr_month) + 1)];
+        let current = dates[group][curr_year][String(getTranslated(getLang(), 'month_names').indexOf(curr_month) + 1)];
         let current_split = current.split('/');
         let current_date = new Date(`${current_split[1]}/${current_split[0]}/${current_split[2]}`);
         diff = Math.round((current_date.getTime() - prev.getTime()) / (1000 * 3600 * 24));
@@ -305,7 +334,7 @@ function getRows(first, day) {
 
     if (back_cycle !== 0) {
         let next = null;
-        let month = month_names.indexOf(curr_month) + 1;
+        let month = getTranslated(getLang(), 'month_names').indexOf(curr_month) + 1;
         if (month == 12) {
             next = dates[group][(parseInt(curr_year)+1).toString()]["1"];
         } else {
@@ -358,13 +387,13 @@ function createGrid(day, start) {
     let rows = getRows(start, day);
     grid = new gridjs.Grid({
         columns: [
-            { name: "Sun", width: '5%' },
-            { name: "Mon", width: '5%' },
-            { name: "Tue", width: '5%' },
-            { name: "Wed", width: '5%' },
-            { name: "Thu", width: '5%' },
-            { name: "Fri", width: '5%' },
-            { name: "Sat", width: '5%' }
+            { name: getTranslated(getLang(), 'sun'), width: '5%' },
+            { name: getTranslated(getLang(), 'mon'), width: '5%' },
+            { name: getTranslated(getLang(), 'tue'), width: '5%' },
+            { name: getTranslated(getLang(), 'wed'), width: '5%' },
+            { name: getTranslated(getLang(), 'thu'), width: '5%' },
+            { name: getTranslated(getLang(), 'fri'), width: '5%' },
+            { name: getTranslated(getLang(), 'sat'), width: '5%' }
         ],
         data: rows,
         style: {
@@ -384,54 +413,8 @@ function createGrid(day, start) {
         }
     }
 
-    //grid.on('cellClick', (e, cell, column, row) => explain(cell["data"]["__e"].parentElement));
     grid.config.store.subscribe(tableStatesListener);
 }
-
-let month_names = [
-    "Muḥarram",
-    "Safar",
-    "Rabī' Ul-Awwal",
-    "Rabī' Uth-Thānī",
-    "Jumāda Al-Ūlā",
-    "Jumāda Ath-Thānī",
-    "Rajab",
-    "Sha'bān",
-    "Ramaḍan",
-    "Shawwāl",
-    "Dhul Qa'dah",
-    "Dhul Ḥijjah"
-]
-
-let greg_months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec"
-]
-
-let greg_months_full = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-];
 
 function setTheme() {
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
@@ -564,7 +547,7 @@ function setupMonths() {
 
     for (let i = min; i < max; i++) {
         let option = document.createElement('option');
-        let greg_mth = greg_months_full[i];
+        let greg_mth = getTranslated(getLang(), 'greg_months_full')[i];
         option.value = greg_mth;
         option.text = greg_mth;
         month_select.options.add(option);
@@ -577,7 +560,7 @@ function setupDays() {
     const [year, earliest, latest] = getExtremes();
     let month_select = document.querySelector('select.month');
 
-    let month = greg_months_full.indexOf(month_select.value);
+    let month = getTranslated(getLang(), 'greg_months_full').indexOf(month_select.value);
 
     let max = 32;
     if ([3, 5, 8, 10].includes(month)) {
@@ -667,7 +650,7 @@ function setupCalendar(initial) {
     setupDays();
 
     let keys = getKeys(group_data);
-    let name = month_names[parseInt(keys[1]) - 1];
+    let name = getTranslated(getLang(), 'month_names')[parseInt(keys[1]) - 1];
     curr_month = name;
     curr_year = keys[0];
     let title = document.querySelector('span.date');
