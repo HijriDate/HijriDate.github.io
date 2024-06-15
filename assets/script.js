@@ -135,7 +135,9 @@ function removeInline() {
 
 function showIndicator(indicator) {
     document.querySelectorAll(indicator).forEach(eid => {
-        eid.classList.add('inline');
+        if (eid.getAttribute('lang') === getLang()) {
+            eid.classList.add('inline');
+        }
     });
 }
 
