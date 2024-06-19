@@ -1,7 +1,24 @@
-body[lang=en] [lang]:not([lang*=en]) {
-    display: none;
+body[lang=en] [lang]:not([lang*=en]), body[lang=en] .inline[lang]:not([lang=en]) {
+    display: none !important;
 }
 
-body[lang=so] [lang]:not([lang*=so]) {
-    display: none;
+body[lang=so] [lang]:not([lang*=so]), body[lang=so] .inline[lang]:not([lang=so]){
+    display: none !important;
+}
+
+body[lang=ar] [lang]:not([lang*=ar]), body[lang=ar] .inline[lang]:not([lang=ar]) {
+    display: none !important;
+}
+
+body[dir=rtl] img.back, body[dir=rtl] img.forward {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+body[lang=ar] th.gridjs-th {
+    padding: auto !important;
+}
+
+body[lang=ar] td span.greg_month, body[lang=ar] td span.box.day {
+    font-size: 0.5em;
 }

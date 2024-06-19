@@ -18,14 +18,16 @@
     <body lang="en">
         <h1 lang="en">Hijri Date</h1>
         <h1 lang="so">Taariikhda Hijriga</h1>
+        <h1 lang="ar">التاريخ الهجري</h1>
 
-        <select name="orgs" class="orgs" onchange="select();"></select>
+        <select name="orgs" class="orgs" onchange="select();" dir="ltr"></select>
         <br />
         <br />
         <div class="toggle">
             <select class="langs" onchange="changeLang();">
                 <option class="en">English</option>
                 <option class="so">Af-Soomaali</option>
+                <option class="ar">العريية</option>
             </select>
             <input type="checkbox" id="darkmode-toggle" onchange="toggleTheme(this.checked)" />
             <label class="darklabel" for="darkmode-toggle">
@@ -77,12 +79,15 @@
         <div class="greg_convert">
             <h2 lang="en">Gregorian to Hijri</h2>
             <h2 lang="so">Taariikh Miiladi Taariikh Hijri U Badal</h2>
+            <h2 lang="ar">الميلادي الى الهجري</h2>
             <select name="year" class="year" onchange="setupMonths();"></select>
             <select name="month" class="month" onchange="setupDays();"></select>
             <select name="day" class="day"></select>
             <br />
             <p class="converted hidden"></p>
-            <button class="convert" onclick="convert();">Convert</button>
+            <button class="convert" onclick="convert();" lang="en">Convert</button>
+            <button class="convert" onclick="convert();" lang="so">Badal</button>
+            <button class="convert" onclick="convert();" lang="ar">محول</button>
         </div>
         <br />
         <div class="keys">
@@ -90,44 +95,54 @@
             <span>&nbsp;-&nbsp;</span>
             <span class="today_exp" lang="en">Today: post-midnight, pre-sunset</span>
             <span class="today_exp" lang="so">Maanta: haddii habaynbar laa dhaafay oo gabaldhac la gaarin</span>
+            <span class="today_exp" lang="ar">اليوم: بعد منتصف الليل، قبل غروب الشمس</span>
             <span>&nbsp;&nbsp;</span>
             <span class="tomorrow_key key">00</span>
             <span>&nbsp;-&nbsp;</span>
             <span class="tomorrow_exp" lang="en">Today: pre-midnight, post-sunset</span>
             <span class="tomorrow_exp" lang="so">Caawa: hadii qoraxdhac la dhaafay oo habaynbar la gaarin</span>
+            <span class="tomorrow_exp" lang="ar">اليوم: بعد غروب الشمس، قبل منتصف الليل</span>
             <span>&nbsp;&nbsp;</span>
             <span class="white_day key">&nbsp;x&nbsp;</span>
             <span>&nbsp;-&nbsp;</span>
             <span class="white_day_exp" lang="en">White day: recommended to fast</span>
             <span class="white_day_exp" lang="so">Maalin Cad: waxaa fiican inaad soontid maalintaan</span>
+            <span class="white_day_exp" lang="ar">اليوم الابيض: مستحب للصيام</span>
             <span>&nbsp;&nbsp;</span>
             <span class="observe key">00</span>
             <span>&nbsp;-&nbsp;</span>
             <span class="observe_exp" lang="en">The new crescent should be observed after sunset</span>
             <span class="observe_exp" lang="so">Bisha cusub markay gabalka maalintaan dhacdo baa la raadinaayaa</span>
+            <span class="observe_exp" lang="ar">ينبغي رؤية الهلال الجديد بعد غروب الشمس</span>
             <span id="arafah" style="display: none;">&nbsp;&nbsp;</span>
             <span id="arafah" class="arafah key" style="display: none;">00</span>
             <span id="arafah" style="display: none;">&nbsp;-&nbsp;</span>
             <span id="arafah" class="arafah_exp" style="display: none;" lang="en">Day of Arafah: Fasting recommended</span>
             <span id="arafah" class="arafah_exp" style="display: none;" lang="so">Maalinta Carafo: inaad soontid baa fiican</span>
+            <span id="arafah" class="arafah_exp" style="display: none;" lang="ar">يوم عرفة: يستحب صيامه</span>
             <span id="eid">&nbsp;&nbsp;</span>
             <span id="eid" class="eid key" style="display: none;">00</span>
             <span id="eid" style="display: none;">&nbsp;-&nbsp;</span>
             <span id="eid" class="eid_exp" style="display: none;" lang="en">Eid</span>
             <span id="eid" class="eid_exp" style="display: none;" lang="so">Ciid/Iid</span>
+            <span id="eid" class="eid_exp" style="display: none;" lang="ar">عيد</span>
             <span id="ashura" class="ashura key" style="display: none;">00</span>
             <span id="ashura" style="display: none;">&nbsp;-&nbsp;</span>
             <span id="ashura" class="ashura_exp" style="display: none;" lang="en">The day of 'Ashura: Fasting recommended</span>
             <span id="ashura" class="ashura_exp" style="display: none;" lang="so">Maalinta Caashura: Inaad soontid baa fiican</span>
+            <span id="ashura" class="ashura_exp" style="display: none;" lang="ar">يوم عاشوراء: صيام مستحب</span>
             <span id="ashura" style="display: none;">&nbsp;&nbsp;</span>
             <span id="ashura" class="ashura_adjacent key" style="display: none;">00</span>
             <span id="ashura" style="display: none;">&nbsp;-&nbsp;</span>
             <span id="ashura" class="ashura_adjacent_exp" style="display: none;" lang="en">The day before/after 'Ashura: fast one of these along with the day of 'Ashura</span>
             <span id="ashura" class="ashura_adjacent_exp" style="display: none;" lang="so">Maalinta ka horreysa ama ka danbeysa maalinta caashura, labadan mid kamid soon markad soontid ama soomi rabtid maalinta caashura</span>
+            <span id="ashura" class="ashura_adjacent_exp" style="display: none;" lang="ar">يوم قبل / بعد عاشوراء: صم واحدًا من هذه مع عاشوراء</span>
         </div>
         <p style="font-size: 0.6em;" lang="en">*Due to the hijri calendar starting at sunset, and the gregorian calendar starting at midnight, calculating the current day's change without location data is difficult, and as such 2 days are highlighted as 'today' depending on whether it is before or after sunset.</p>
         <p style="font-size: 0.6em;" lang="so">*Tariikhda hijriga maalintiisa cusub madaama ey bilaawato qoraxdhacda kadib, iyo tariikhda miiladiga malmeeheeda ey bilowdaan habeynbarka kadib, waxaa adag ina la ogaado maalintey kuu tahay xagga tariikhda hijriga anagoo ogaan meeshaad daggantahay, marka labo malmood baan calaamadinay.</p>
+        <p style="font-size: 0.6em;" lang="ar">*نظرًا لأن التقويم الهجري يبدأ عند غروب الشمس، والتقويم الميلادي الذي يبدأ عند منتصف الليل، فإن حساب تغير اليوم الحالي بدون بيانات الموقع أمر صعب، وبالتالي يتم تمييز يومين على أنه "اليوم" اعتمادًا على ما إذا كان قبل غروب الشمس أو بعده. (في الأساس شرح للسلسلة الأولى)</span>
         <p style="font-size: 0.6em;" lang="en">**Where today is a highlighted day, the background will be a gradient with the top colour indicating that it is today, and the bottom colour being the colour of the highlighted day show its significance - with the exception of the white days wherein the text colour is changed to reflect that it is today</p>
         <p style="font-size: 0.6em;" lang="so">**Maanta hadduu yahay maaliin calamadsan siida Carafo oo kale, waxaa la muujin midabo isku qasan oo midabka kore uu tusinaayo inuu maanta yahay maalinta calaamadsan, iyo midabka hoose uu tilmaamaayo sababta kale uu u calaamadsan yahay</p>
+        <p style="font-size: 0.6em;" lang="ar">**عندما يكون اليوم يومًا مميزًا، ستكون الخلفية متدرجة حيث يشير اللون العلوي إلى أنه اليوم، واللون السفلي كونه لون اليوم المميز يوضح أهميته - باستثناء الأيام البيضاء حيث النص تم تغيير اللون ليعكس ما هو عليه اليوم</span>
     </body>
 </html>

@@ -7,7 +7,7 @@ div:has(img):has(span) {
     justify-content: center;
 }
 
-th.gridjs-th {
+th.gridjs-th:not(body[lang=ar] th) {
     padding: 0.7em !important;
     width: auto;
 }
@@ -456,4 +456,8 @@ select.langs, body.dark select.langs {
 
 body.dark select.langs {
     filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(52deg) brightness(108%) contrast(101%);
+}
+
+div.gridjs-th-content {
+    text-align: center;
 }

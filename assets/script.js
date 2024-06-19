@@ -13,13 +13,21 @@ function changeLang() {
     }
 
     document.body.setAttribute('lang', lang_code);
+    if (isRtl()) {
+        document.body.setAttribute('dir', 'rtl');
+        document.getElementById('table').setAttribute('dir', 'rtl');
+    } else {
+        document.body.setAttribute('dir', 'ltr');
+        document.getElementById('table').setAttribute('dir', 'ltr');
+    }
+    render();
 }
 
 function getLang() {
     return document.querySelector('body').getAttribute('lang');
 }
 
-const rtl_langs = [];
+const rtl_langs = ['ar'];
 function isRtl() {
     return rtl_langs.includes(getLang());
 }
@@ -89,7 +97,7 @@ function getConvertedHijriDate(conv_date) {
 
                 if (conv_date >= month_start && conv_date <= month_end) {
                     let diff = Math.round((((conv_date.getTime() - month_start.getTime()) / dayLength)) + 1);
-                    let converted = `${getTranslated(getLang(), 'converted')}: ${diff} ${getTranslated(getLang(), 'month_names')[j]} ${years[i]}`;
+                    let converted = `${getTranslated(getLang(), 'converted')}: ${getNumber(getLang(), diff)} ${getTranslated(getLang(), 'month_names')[j]} ${getNumber(getLang(), years[i])}`;
                     return converted;
                 }
             }
@@ -136,9 +144,9 @@ function removeInline() {
 function showIndicator(indicator) {
     document.querySelectorAll(indicator).forEach(indicated => {
         let lang = indicated.getAttribute('lang');
-        if (lang === getLang() || lang === null) {
-            indicated.classList.add('inline');
-        }
+        //if (lang === getLang() || lang === null) {
+        indicated.classList.add('inline');
+        //}
     });
 }
 
@@ -229,10 +237,10 @@ function getDayHtml(start, num) {
     day.setDate(day.getDate() + num - 1);
 
     if (isRtl()) {
-        return gridjs.html(`<div class="gregorian"><span class="greg_month">${getTranslated(getLang(), 'greg_months')[day.getMonth()]} ${day.getFullYear()}</span><span class="box day">${day.getDay()}</span></div><div><span class="hijri_day">${num}</span></div>`)
+        return gridjs.html(`<div class="gregorian"><span class="greg_month">${getTranslated(getLang(), 'greg_months')[day.getMonth()]} ${getNumber(getLang(), day.getFullYear())}</span><span class="box day">${getNumber(getLang(), day.getDate())}</span></div><div><span class="hijri_day">${getNumber(getLang(), num)}</span></div>`)
     }
 
-    return gridjs.html(`<div class="gregorian"><span class="box day">${day.getDate()}</span><span class="greg_month">${getTranslated(getLang(), 'greg_months')[day.getMonth()]} ${day.getFullYear()}</span></div><div><span class="hijri_day">${num}</span></div>`)
+    return gridjs.html(`<div class="gregorian"><span class="box day">${getNumber(getLang(), day.getDate())}</span><span class="greg_month">${getTranslated(getLang(), 'greg_months')[day.getMonth()]} ${getNumber(getLang(), day.getFullYear())}</span></div><div><span class="hijri_day">${getNumber(getLang(), num)}</span></div>`)
 }
 
 row_four_end = 0;
@@ -401,7 +409,8 @@ function createGrid(day, start) {
         data: rows,
         style: {
             th: {
-                'text-align': 'center'
+                'text-align': 'center',
+                'width': 'max-content'
             },
             td: {
                 'width': '15px'
@@ -456,6 +465,15 @@ function render() {
     setupCalendar(false);
     let rows = getRows(curr_start, curr_day);
     grid.updateConfig({
+        columns: [
+            { name: getTranslated(getLang(), 'sun'), width: '5%' },
+            { name: getTranslated(getLang(), 'mon'), width: '5%' },
+            { name: getTranslated(getLang(), 'tue'), width: '5%' },
+            { name: getTranslated(getLang(), 'wed'), width: '5%' },
+            { name: getTranslated(getLang(), 'thu'), width: '5%' },
+            { name: getTranslated(getLang(), 'fri'), width: '5%' },
+            { name: getTranslated(getLang(), 'sat'), width: '5%' }
+        ],
         data: rows
     }).forceRender();
 }
@@ -551,7 +569,8 @@ function setupMonths() {
     for (let i = min; i < max; i++) {
         let option = document.createElement('option');
         let greg_mth = getTranslated(getLang(), 'greg_months_full')[i];
-        option.value = greg_mth;
+        let en_mth = getTranslated('en', 'greg_months_full')[i];
+        option.value = en_mth;
         option.text = greg_mth;
         month_select.options.add(option);
     }
@@ -618,8 +637,9 @@ function setupDays() {
 
     for (let i = min; i < max; i++) {
         let option = document.createElement('option');
+        let num = getNumber(getLang(), i);
         option.value = i;
-        option.text = i;
+        option.text = num;
         day_select.options.add(option);
     }
 }
@@ -644,8 +664,9 @@ function setupCalendar(initial) {
     year_select.options.length = 0;
     for (let i = parseInt(latest_date.getFullYear()); i >= parseInt(earliest_date.getFullYear()); i--) {
         let option = document.createElement('option');
+        let num = getNumber(getLang(), i);
         option.value = i;
-        option.text = i;
+        option.text = num;
         year_select.options.add(option);
     }
 
@@ -662,7 +683,7 @@ function setupCalendar(initial) {
         setupCalendar(initial);
         return;
     }
-    title.innerText = `${name} ${keys[0]}`;
+    title.innerText = `${name} ${getNumber(getLang(), keys[0])}`;
     let months = group_data[keys[0]];
     let month_keys = Object.getOwnPropertyNames(months);
     let last_month = month_keys[month_keys.length - 1];
