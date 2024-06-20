@@ -205,6 +205,12 @@ function highlight(day, start) {
         case getTranslated(getLang(), 'month_names')[11]:
             cells[day + 8].classList.add('arafah');
             cells[day + 9].classList.add('eid');
+            let tashreeq = [...cells].slice(day + 10, day + 13);
+            tashreeq.forEach(day => {
+                day.classList.add('tashreeq');
+                showIndicator('#tashreeq');
+                explain(day);
+            });
             explain(cells[day + 8]);
             explain(cells[day + 9]);
             showIndicator('#arafah');
@@ -378,14 +384,21 @@ function getRows(first, day) {
 }
 
 function explain(td) {
-    let explainable = ['today', 'tomorrow', 'white_day', 'observe', 'arafah', 'eid', 'ashura', 'ashura_adjacent'];
+    let explainable = ['today', 'tomorrow', 'white_day', 'observe', 'arafah', 'eid', 'ashura', 'ashura_adjacent', 'tashreeq'];
     let intersect = explainable.filter(Set.prototype.has, new Set(td.classList));
+    if (intersect.includes('white_day') && intersect.includes('tashreeq')) {
+        intersect.splice(intersect.indexOf('white_day'), 1);
+    }
 
     let explanation = '';
     for (let i = 0; i < intersect.length; i++) {
         let cls = intersect[i];
         let exp = document.querySelector(`.${cls}_exp`).innerText;
-        explanation += `${exp} `;
+        if (i !== intersect.length - 1) {
+            explanation += `${exp}, `;
+        } else {
+            explanation += `${exp}`;
+        }
     }
 
     if (explanation !== null && explanation.match(/^ *$/) === null) {
