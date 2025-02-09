@@ -106,7 +106,7 @@ body.dark h1, body.dark span, body.dark p {
     color: #fff;
 }
 
-body.dark img {
+body.dark img:not(.map):not(.visibility) {
     filter: invert(1);
 }
 
@@ -171,6 +171,55 @@ body.dark select {
     background: #000;
 }
 
+.code_a {
+    background: #3eff00;
+    color: #3eff00 !important;
+}
+
+.code_b {
+    background: #3eff6d;
+    color: #3eff6d !important;
+}
+
+.code_c {
+    background: #00ff9e;
+    color: #00ff9e !important;
+}
+
+.code_d {
+    background: #faff00;
+    color: #faff00 !important;
+}
+
+.code_e {
+    background: #ff783c;
+    color: #ff783c !important;
+}
+
+.code_g {
+    background: #6a0dad;
+    color: #6a0dad !important;
+}
+
+.code_i {
+    background: #ff0000;
+    color: #ff0000 !important;
+}
+
+.code_j {
+    background: #b50757;
+    color: #b50757 !important;
+}
+
+.map_keys:not(.yallop) .yallop, .map_keys.yallop .odeh {
+    display: none;
+}
+
+body.dark h4 {
+    color: #fff;
+    margin: 0;
+}
+
 .today_key {
     background: #87ceeb;
     color: #87ceeb !important;
@@ -190,7 +239,7 @@ body.dark select {
     user-select: none;
 }
 
-div.keys span:not(span > span) {
+div.keys span:not(span > span), div.map_keys span:not(span > span) {
     font-size: 0.6em;
 }
 
@@ -473,4 +522,21 @@ body td.tashreeq, body.dark td.white_day.tashreeq {
 .tashreeq.key {
     background: #a35d9c !important;
     color: #a35d9c;
+}
+
+div:has(img.map) {
+    position: relative;
+    display: inline;
+}
+
+img.map, img.visibility {
+    max-width: 100%;
+    border-radius: 25px;
+    border: 2px solid #fff;
+}
+
+img.visibility {
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }

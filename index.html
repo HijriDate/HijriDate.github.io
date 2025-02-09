@@ -75,6 +75,88 @@
             <img src="/assets/icons/chevron_right.svg" class="forward" onclick="forward();" />
         </div>
         <div id="table"></div>
+        <br class="map" />
+        <h4 class="map_title"></h4>
+        <br />
+        <div class="map">
+            <select name="conjunction" class="conjunction" onchange="getMap();"></select>
+            <select name="criteria" class="criteria" onchange="get_criteria();">
+                <option class="yallop" lang="en" selected>Yallop Criteria</option>
+                <option class="yallop" lang="so">Xisaabta Yallop</option>
+                <option class="yallop" lang="ar">معايير يالوب</option>
+                <option class="odeh" lang="en">Odeh Criteria</option>
+                <option class="odeh" lang="so">Xisaabta Odeh</option>
+                <option class="odeh" lang="ar">معايير اوده</option>
+            </select>
+        </div>
+        <br class="pre_map" />
+        <div>
+            <img class="map" />
+            <span style="font-size: 0.6em;" lang="en">Generated using:&nbsp;</span><a href="https://github.com/crescent-moon-visibility/crescent-moon-visibility" style="font-size: 0.6em;" lang="en">this crescent visibility map generator</a>
+            <span style="font-size: 0.6em;" lang="so">Sawirka waxaa lagu sameeyey:&nbsp;</span><a href="https://github.com/crescent-moon-visibility/crescent-moon-visibility" style="font-size: 0.6em;" lang="so">brograamkaan</a>
+            <span style="font-size: 0.6em;" lang="ar">صنع&nbsp;</span><a href="https://github.com/crescent-moon-visibility/crescent-moon-visibility" style="font-size: 0.6em;" lang="ar">بهذا البرنامج</a>
+        </div>
+        <br class="pre_keys" />
+        <div class="map_keys yallop">
+            <span class="code_a key yallop">00</span>
+            <span class="code_a_exp exp yallop" lang="en">A - easily visible to the unaided eye</span>
+            <span class="code_a_exp exp yallop" lang="so">A - si fudud bey isha u qaban kartaa</span>
+            <span class="code_a_exp exp yallop" lang="ar">أ - يمكن رؤية الهلال بسهولة</span>
+
+            <span class="code_a key odeh">00</span>
+            <span class="code_a_exp exp odeh" lang="en">A - visible with the naked eye</span>
+            <span class="code_a_exp exp odeh" lang="so">A - isha wey qaban kartaa</span>
+            <span class="code_a_exp exp odeh" lang="ar">أ - يمكن رؤية الهلال بالعين المجردة</span>
+
+            <span class="code_b key yallop">00</span>
+            <span class="code_b_exp exp yallop" lang="en">B - visible under perfect atmospheric conditions</span>
+            <span class="code_b_exp exp yallop" lang="so">B - waa la arki karaa jawiga hadduu fiicanyahay</span>
+            <span class="code_b_exp exp yallop" lang="ar">ب - يمكن رؤية الهلال في أحوال الطقس المثالية</span>
+
+            <span class="code_c key yallop">00</span>
+            <span class="code_c_exp exp yallop" lang="en">C - visible to the unaided eye after found after found with optical aid</span>
+            <span class="code_c_exp exp yallop" lang="so">C - isha baad ku arki kartaa marka hore haddaad qalab ku heshid</span>
+            <span class="code_c_exp exp yallop" lang="ar">ج - يمكن رؤية الهلال بالعين المجرد ان وجدته بتلسكوب اولا</span>
+
+            <span class="code_c key odeh">00</span>
+            <span class="code_c_exp exp odeh" lang="en">C - visible with optical aid</span>
+            <span class="code_c_exp exp odeh" lang="so">C - qalab baa lagu arki karaa</span>
+            <span class="code_c_exp exp odeh" lang="ar">ج - يمكن رؤية الهلال بتلسكوب</span>
+
+            <span class="code_d key yallop">00</span>
+            <span class="code_d_exp exp yallop" lang="en">D - only visible with binoculars or conventional telescopes</span>
+            <span class="code_d_exp exp yallop" lang="so">D - qalab kaliyaa lagu arki karaa</span>
+            <span class="code_d_exp exp yallop" lang="ar">د - يمكن رؤية الهلال بمنظار او بتلسكوب فقط</span>
+
+            <span class="code_e key yallop">00</span>
+            <span class="code_e_exp exp yallop" lang="en">E - not visible with conventional telescopes</span>
+            <span class="code_e_exp exp yallop" lang="so">E - qalab caadi ah lagu ma arki karo</span>
+            <span class="code_e_exp exp yallop" lang="ar">ج - غير مرئية مع بالتلسكوب التقليدي</span>
+
+            <span class="code_e key odeh">00</span>
+            <span class="code_e_exp exp odeh" lang="en">E - visible only with optical aid</span>
+            <span class="code_e_exp exp odeh" lang="so">E - qalab kaliyaa lagu aeki karaa</span>
+            <span class="code_e_exp exp odeh" lang="ar">ح - يمكن رؤية الهلال بتلسكوب فقط</span>
+
+            <span class="code_f_exp exp yallop" lang="en">&nbsp;&nbsp;F - beyond danjon limit (7°)</span>
+            <span class="code_f_exp exp yallop" lang="so">&nbsp;&nbsp;F - qoraxa ito dayaxa wey isku aadanyihiin, xagasha u dhexeysana wexey ka yartahay 7°</span>
+            <span class="code_f_exp exp yallop" lang="ar">&nbsp;&nbsp;ط - ما بعد دانجون (٧°) (هذه هي درجة الفصل الزاوي بين الشمس والقمر، وأقل من ذلك يعني أنهما قريبان جدًا وبالتالي يخفي ضوء الشمس القمر)</span>
+
+            <span class="code_g key">00</span>
+            <span class="code_g_exp" lang="en">G - sunset before new moon</span>
+            <span class="code_g_exp" lang="so">G - qoraxda waxay dhacaysaa bisha cusub oo wali dhalan</span>
+            <span class="code_g_exp" lang="ar">ي - غروب الشمس قبل القمر الجديد</span>
+
+            <span class="code_i key">00</span>
+            <span class="code_i_exp" lang="en">I - moonset before sunset</span>
+            <span class="code_i_exp" lang="so">I - dayaxaa dhacaayo inteysan qoraxda dhicin</span>
+            <span class="code_i_exp" lang="ar">ك - غروب القمر قبل غروب الشمس</span>
+
+            <span class="code_j key">00</span>
+            <span class="code_j_exp" lang="en">J - sunset before new moon and moonset before sunset</span>
+            <span class="code_j_exp" lang="so">J - qoraxda waxay dhacaysaa bisha xusub oo wali dhalan iyo dayaxaa dhacaayo inteysan qoraxda dhicin</span>
+            <span class="code_j_exp" lang="ar">ل - غروب الشمس قبل القمر الجديد وغروب القمر قبل غروب الشمس</span>
+        </div>
         <br />
         <div class="greg_convert">
             <h2 lang="en">Gregorian to Hijri</h2>

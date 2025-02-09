@@ -12,7 +12,15 @@ function changeLang() {
         }
     }
 
+    let criteria = [...document.querySelector("select.criteria").options].filter(option => option.getAttribute("lang") === getLang()).map(x => x.text);
+    let selected_criteria = document.querySelector("select.criteria").value;
+    let criteria_index = criteria.indexOf(selected_criteria);
+    let new_criteria = [...document.querySelector("select.criteria").options].filter(option => option.getAttribute("lang") === lang_code).map(x => x.text)[criteria_index];
+    let criteria_index_all = [...document.querySelector("select.criteria").options].map(x => x.text).indexOf(new_criteria);
+
     document.body.setAttribute('lang', lang_code);
+    document.querySelector("select.criteria").options.selectedIndex = criteria_index_all;
+
     if (isRtl()) {
         document.body.setAttribute('dir', 'rtl');
         document.getElementById('table').setAttribute('dir', 'rtl');
@@ -20,6 +28,7 @@ function changeLang() {
         document.body.setAttribute('dir', 'ltr');
         document.getElementById('table').setAttribute('dir', 'ltr');
     }
+
     render();
 }
 
@@ -550,6 +559,38 @@ function getExtremes() {
     return [year, earliest, latest];
 }
 
+function get_criteria() {
+    let criteria = document.querySelector(".criteria").value;
+    let map_keys = document.querySelector("div.map_keys");
+    let criteria_index = [...document.querySelector("select.criteria").options].filter(x => x.getAttribute("lang") === getLang()).map(x => x.text).indexOf(criteria);
+
+    if (criteria_index !== 0) {
+        map_keys.classList.remove("yallop");
+    } else {
+        map_keys.classList.add("yallop");
+    }
+
+    getMap();
+}
+
+function getMap() {
+    let conjunction = document.querySelector("select.conjunction");
+    let conj_index = [...conjunction.options].map(x => x.text).indexOf(conjunction.value);
+    let criteria_elem = document.querySelector("select.criteria").value;
+    let criteria_index = [...document.querySelector("select.criteria").options].filter(x => x.getAttribute("lang") === getLang()).map(x => x.text).indexOf(criteria_elem);
+    let criteria = (criteria_index === 0) ? "yallop" : "odeh";
+    let next_month = parseInt(getTranslated(getLang(), 'month_names').indexOf(curr_month)) + 1;
+    let next_year = parseInt(curr_year);
+
+    if (next_month > 12) {
+        next_year += 1;
+        next_month = 1;
+    }
+
+    let map_name = `https://raw.githubusercontent.com/AbdullahM0hamed/lunarvis-maps/refs/heads/master/${next_year}/${next_month + 1}/${conj_index}-${criteria}.png`;
+    document.querySelector("img.map").src = map_name;
+}
+
 function setupMonths() {
     const [year, earliest, latest] = getExtremes();
     let month_select = document.querySelector('select.month');
@@ -737,6 +778,62 @@ function setupCalendar(initial) {
     if (initial) {
         createGrid(day, date);
     }
+
+    if (offset !== 0 ) {
+        document.querySelector("br.map").style.display = "none";
+        document.querySelector("br.pre_map").style.display = "none";
+        document.querySelector("div.map").style.display = "none";
+        document.querySelector("div:has(img.map)").style.display = "none";
+        document.querySelector("h4.map_title").style.display = "none";
+        document.querySelector("div.map_keys").style.display = "none";
+        document.querySelector("br.pre_keys").style.display = "none";
+        return;
+    } else {
+        document.querySelector("br.map").style.display = "inline";
+        document.querySelector("br.pre_map").style.display = "inline";
+        document.querySelector("div.map").style.display = "block";
+        document.querySelector("div:has(img.map)").style.display = "inline";
+        document.querySelector("h4.map_title").style.display = "block";
+        document.querySelector("div.map_keys").style.display = "block";
+        document.querySelector("br.pre_keys").style.display = "inline";
+    }
+
+    let next_month = parseInt(getTranslated(getLang(), 'month_names').indexOf(curr_month)) + 1;
+    let next_year = parseInt(curr_year);
+
+    if (next_month > 12) {
+        next_year += 1;
+        next_month = 1;
+    }
+
+    fetch('https://raw.githubusercontent.com/AbdullahM0hamed/lunarvis-maps/refs/heads/master/maps.json').then(function(response) {
+        return response.json();
+    }).then(function(data) {
+        let next_hijri_month = getTranslated(getLang(), 'month_names')[next_month];
+        let title = getTranslatedInterpolated(getLang(), 'crescent_vis', {'month': next_hijri_month, 'year': getNumber(getLang(), next_year)});
+        document.querySelector("h4.map_title").textContent = title;
+
+        let conjunction = data[next_year][next_month + 1];
+        let conjDate = new Date(`${conjunction.split('/')[1]}/${conjunction.split('/')[0]}/${conjunction.split('/')[2]}`);
+        let conjDateOne = new Date();
+        conjDateOne.setDate(conjDate.getDate() + 1);
+        let conjDateTwo = new Date();
+        conjDateTwo.setDate(conjDate.getDate() + 2);
+
+        let select = document.querySelector("select.conjunction");
+        let dates = [conjDate, conjDateOne, conjDateTwo];
+        select.textContent = "";
+        for (date in dates) {
+            var elem = document.createElement("option");
+            let partial_date = `${getTranslated(getLang(), 'greg_months_full')[dates[date].getMonth()]} ${getNumber(getLang(), dates[date].getFullYear())}`;
+            elem.value = `${getNumber(getLang(), dates[date].getDate())} ${partial_date}`;
+            elem.innerText = elem.value;
+            select.appendChild(elem);
+        }
+
+        getMap();
+    }).then(function(err) {
+    })
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {

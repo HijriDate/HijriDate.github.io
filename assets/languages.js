@@ -49,7 +49,8 @@ const languages = {
             'October',
             'November',
             'December'
-        ]
+        ],
+        'crescent_vis': 'Crescent Visibility ${month} ${year}'
     },
     'so': {
         'converted': 'Badalan',
@@ -101,7 +102,8 @@ const languages = {
             'Oktoobar',
             'Nofeembar',
             'Diseembar'
-        ]
+        ],
+        'crescent_vis': 'Suurtagalnimada Aragtida Bisha ${month} ${year}'
     },
     'ar': {
         'converted': 'محول',
@@ -153,7 +155,8 @@ const languages = {
             'اكتوبر',
             'نوفمبر',
             'ديسمبر'
-        ]
+        ],
+        'crescent_vis': 'وضوح الهلال ${month} ${year}'
     }
 };
 
@@ -188,4 +191,12 @@ function getNumber(lang, num) {
 
 function getTranslated(lang, key) {
     return languages[lang][key];
+}
+
+//text = "Crescent Visibility ${month} ${year}"; json = {"month": "Ramaḍān", "year": 1446}, result = "Crescent Visibility Ramaḍān 1446"
+function getTranslatedInterpolated(lang, key, json) {
+    const result = getTranslated(lang, key).replace(/\${(.*?)}/g, (match, p1) => {
+        return json[p1] !== undefined ? json[p1] : match;
+    });
+    return result;
 }
